@@ -1,7 +1,7 @@
-name: "autism_epigenetics"
+name: autism_epigenetics
 output_dir: ../docs
 navbar:
-  title: "autism_epigenetics"
+  title: autism_epigenetics
   left:
   - text: Home
     href: index.html
@@ -9,6 +9,10 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right:
+  - icon: fab fa-github
+    text: Source code
+    href: https://github.com/han16/autism_epigenetics
 output:
   workflowr::wflow_html:
     toc: yes
