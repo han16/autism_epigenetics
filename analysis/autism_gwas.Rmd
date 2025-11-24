@@ -1,0 +1,20 @@
+---
+title: "autism GWAS"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+date: "2025-11-24"
+---
+
+
+```{r, message=F, warning=F}
+library(tibble)
+path="C:\\han\\Dataset\\20251112_PMID_30804558\\14671989\\iPSYCH-PGC_ASD_Nov2017\\"
+```
+
+```{r, message=F, warning=F}
+iPSYCH_PGC_ASD_Nov2017=as_tibble(read.table(paste0(path, "iPSYCH-PGC_ASD_Nov2017"), header=T))
+head(iPSYCH_PGC_ASD_Nov2017)
+dim(iPSYCH_PGC_ASD_Nov2017)
+```
