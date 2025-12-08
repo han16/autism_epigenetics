@@ -1,0 +1,91 @@
+---
+title: "genome coordinate conversion"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+date: "2025-12-04"
+---
+
+
+```{r, echo=F, message=F, warning=F}
+library(readxl)
+
+library(dplyr)
+library(GenomicRanges)
+
+#BiocManager::install("rtracklayer")
+library(rtracklayer)
+```
+
+
+```{r, echo=F, message=F, warning=F}
+path1="C:\\han\\Projects\\ShareShengtong\\ShareShengtong\\EpiBmal1Cerebellum\\Draft\\Files\\"
+path2="C:\\han\\Projects\\2025_11_autism_epigenetics\\Data\\mm10ToHg19.over.chain\\"
+```
+
+
+
+```{r, message=F, warning=F}
+cre_enhancer=read_excel(paste0(path1, "Figure2-PanelA_cre_h3k27ac_Enhancer.xlsx"), col_names = F)
+flx_enhancer=read_excel(paste0(path1, "Figure2-PanelA_flx_h3k27ac_Enhancer.xlsx"), col_names = F)
+```
+
+
+```{r, message=F, warning=F}
+# convert into GRanges
+cre_enhancer_mm10 <- GRanges(
+  seqnames = cre_enhancer[[1]],        # chromosome (chr1)
+  ranges   = IRanges(start = cre_enhancer[[2]],
+                     end   = cre_enhancer[[3]])
+)
+
+flx_enhancer_mm10 <- GRanges(
+  seqnames = flx_enhancer[[1]],        # chromosome (chr1)
+  ranges   = IRanges(start = flx_enhancer[[2]],
+                     end   = flx_enhancer[[3]])
+)
+
+```
+
+
+```{r, message=F, warning=F}
+
+chain <- import.chain(paste0(path2, "mm10ToHg19.over.chain"))
+
+
+# perform liftover 
+cre_enhancer_mm10_to_hg19 <- liftOver(cre_enhancer_mm10, chain)
+
+# Some mm10 regions map to multiple human regions — flatten to keep all
+cre_enhancer_mm10_to_hg19 <- unlist(cre_enhancer_mm10_to_hg19)
+
+
+flx_enhancer_mm10_to_hg19 <- liftOver(flx_enhancer_mm10, chain)
+
+# Some mm10 regions map to multiple human regions — flatten to keep all
+flx_enhancer_mm10_to_hg19 <- unlist(flx_enhancer_mm10_to_hg19)
+
+```
+
+
+```{r, message=F, warning=F}
+# Convert to data frame
+cre_enhancer_hg19 <- data.frame(
+  chr = as.character(seqnames(cre_enhancer_mm10_to_hg19)),
+  start = start(cre_enhancer_mm10_to_hg19),
+  end = end(cre_enhancer_mm10_to_hg19)
+)
+
+flx_enhancer_hg19 <- data.frame(
+  chr = as.character(seqnames(flx_enhancer_mm10_to_hg19)),
+  start = start(flx_enhancer_mm10_to_hg19),
+  end = end(flx_enhancer_mm10_to_hg19)
+)
+
+
+```
+
+
+
+

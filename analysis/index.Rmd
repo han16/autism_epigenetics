@@ -12,3 +12,5 @@ editor_options:
 
 
 * [autism GWAS data](autism_gwas.html) 
+
+* [convert mouse to human genome](genome_conversion.html)
