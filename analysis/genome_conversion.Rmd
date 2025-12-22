@@ -9,6 +9,7 @@ date: "2025-12-04"
 
 
 ```{r, echo=F, message=F, warning=F}
+rm(list=ls())
 library(readxl)
 
 library(dplyr)
@@ -29,6 +30,10 @@ path2="C:\\han\\Projects\\2025_11_autism_epigenetics\\Data\\mm10ToHg19.over.chai
 ```{r, message=F, warning=F}
 cre_enhancer=read_excel(paste0(path1, "Figure2-PanelA_cre_h3k27ac_Enhancer.xlsx"), col_names = F)
 flx_enhancer=read_excel(paste0(path1, "Figure2-PanelA_flx_h3k27ac_Enhancer.xlsx"), col_names = F)
+head(cre_enhancer)
+dim(cre_enhancer)
+dim(flx_enhancer)
+head(flx_enhancer)
 ```
 
 
@@ -83,7 +88,11 @@ flx_enhancer_hg19 <- data.frame(
   end = end(flx_enhancer_mm10_to_hg19)
 )
 
+dim(cre_enhancer_hg19)
+head(cre_enhancer_hg19)
 
+dim(flx_enhancer_hg19)
+head(flx_enhancer_hg19)
 ```
 
 

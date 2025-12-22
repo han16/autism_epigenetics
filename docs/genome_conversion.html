@@ -400,7 +400,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-12-08
+<strong>Last updated:</strong> 2025-12-22
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -438,10 +438,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree2cfd1edbf7a3d9ba0817e3d513f9f8b4a55f1ebbtargetblank2cfd1eda">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree31f76a0b49bbe6148410b1fa3c6860de1619a3e0targetblank31f76a0a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/2cfd1edbf7a3d9ba0817e3d513f9f8b4a55f1ebb" target="_blank">2cfd1ed</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/31f76a0b49bbe6148410b1fa3c6860de1619a3e0" target="_blank">31f76a0</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree2cfd1edbf7a3d9ba0817e3d513f9f8b4a55f1ebbtargetblank2cfd1eda"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree31f76a0b49bbe6148410b1fa3c6860de1619a3e0targetblank31f76a0a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/2cfd1edbf7a3d9ba0817e3d513f9f8b4a55f1ebb" target="_blank">2cfd1ed</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/31f76a0b49bbe6148410b1fa3c6860de1619a3e0" target="_blank">31f76a0</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -566,11 +566,8 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Untracked files:
-    Untracked:  analysis/genome_conversion.Rmd
-
 Unstaged changes:
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/genome_conversion.Rmd
 
 </code></pre>
 <p>
@@ -585,16 +582,104 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/genome_conversion.Rmd</code>) and
+HTML (<code>docs/genome_conversion.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/31f76a0b49bbe6148410b1fa3c6860de1619a3e0/analysis/genome_conversion.Rmd" target="_blank">31f76a0</a>
+</td>
+<td>
+han
+</td>
+<td>
+2025-12-08
+</td>
+<td>
+12/8/2025
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/31f76a0b49bbe6148410b1fa3c6860de1619a3e0/docs/genome_conversion.html" target="_blank">31f76a0</a>
+</td>
+<td>
+han
+</td>
+<td>
+2025-12-08
+</td>
+<td>
+12/8/2025
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
 </div>
 <pre class="r"><code>cre_enhancer=read_excel(paste0(path1, &quot;Figure2-PanelA_cre_h3k27ac_Enhancer.xlsx&quot;), col_names = F)
-flx_enhancer=read_excel(paste0(path1, &quot;Figure2-PanelA_flx_h3k27ac_Enhancer.xlsx&quot;), col_names = F)</code></pre>
+flx_enhancer=read_excel(paste0(path1, &quot;Figure2-PanelA_flx_h3k27ac_Enhancer.xlsx&quot;), col_names = F)
+head(cre_enhancer)</code></pre>
+<pre><code># A tibble: 6 × 9
+  ...1     ...2    ...3 ...4     ...5    ...6 ...7   ...8     ...9
+  &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;
+1 chr1  3514703 3514985 chr1  3671497 3671498 Xkr4   -      156513
+2 chr1  5019208 5020053 chr1  5070284 5070285 Rgs20  -       50232
+3 chr1  6728603 6738069 chr1  6487231 6487232 St18   +     -241372
+4 chr1  6867060 6867413 chr1  7088920 7088921 Pcmtd1 +      221508
+5 chr1  7094976 7095481 chr1  7088920 7088921 Pcmtd1 +       -6056
+6 chr1  7138460 7138642 chr1  7088920 7088921 Pcmtd1 +      -49540</code></pre>
+<pre class="r"><code>dim(cre_enhancer)</code></pre>
+<pre><code>[1] 23895     9</code></pre>
+<pre class="r"><code>dim(flx_enhancer)</code></pre>
+<pre><code>[1] 48640     9</code></pre>
+<pre class="r"><code>head(flx_enhancer)</code></pre>
+<pre><code># A tibble: 6 × 9
+  ...1     ...2    ...3 ...4     ...5    ...6 ...7  ...8    ...9
+  &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
+1 chr1  3518036 3518238 chr1  3671497 3671498 Xkr4  -     153260
+2 chr1  4571434 4572209 chr1  4497353 4497354 Sox17 -     -74081
+3 chr1  5019062 5019976 chr1  5070284 5070285 Rgs20 -      50309
+4 chr1  5020081 5021272 chr1  5070284 5070285 Rgs20 -      49013
+5 chr1  5023205 5023562 chr1  5070284 5070285 Rgs20 -      46723
+6 chr1  6441088 6441749 chr1  6487231 6487232 St18  +      45483</code></pre>
 <pre class="r"><code># convert into GRanges
 cre_enhancer_mm10 &lt;- GRanges(
   seqnames = cre_enhancer[[1]],        # chromosome (chr1)
@@ -632,7 +717,28 @@ flx_enhancer_hg19 &lt;- data.frame(
   chr = as.character(seqnames(flx_enhancer_mm10_to_hg19)),
   start = start(flx_enhancer_mm10_to_hg19),
   end = end(flx_enhancer_mm10_to_hg19)
-)</code></pre>
+)
+
+dim(cre_enhancer_hg19)</code></pre>
+<pre><code>[1] 579666      3</code></pre>
+<pre class="r"><code>head(cre_enhancer_hg19)</code></pre>
+<pre><code>   chr    start      end
+1 chr8 56142555 56142576
+2 chr8 56142528 56142550
+3 chr8 56142514 56142525
+4 chr8 56142472 56142513
+5 chr8 56142460 56142470
+6 chr8 54793747 54793750</code></pre>
+<pre class="r"><code>dim(flx_enhancer_hg19)</code></pre>
+<pre><code>[1] 1084125       3</code></pre>
+<pre class="r"><code>head(flx_enhancer_hg19)</code></pre>
+<pre><code>   chr    start      end
+1 chr8 56138109 56138119
+2 chr8 56138002 56138102
+3 chr8 56137976 56137991
+4 chr8 56137965 56137974
+5 chr8 56137951 56137963
+6 chr8 56137947 56137950</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -685,26 +791,26 @@ loaded via a namespace (and not attached):
 [27] sass_0.4.9                  RCurl_1.98-1.16            
 [29] yaml_2.3.8                  later_1.3.2                
 [31] pillar_1.9.0                crayon_1.5.2               
-[33] jquerylib_0.1.4             BiocParallel_1.38.0        
-[35] DelayedArray_0.30.1         cachem_1.0.8               
-[37] abind_1.4-5                 tidyselect_1.2.1           
-[39] digest_0.6.35               stringi_1.8.4              
-[41] restfulr_0.0.16             grid_4.4.0                 
-[43] rprojroot_2.0.4             fastmap_1.1.1              
-[45] SparseArray_1.4.8           cli_3.6.2                  
-[47] magrittr_2.0.3              S4Arrays_1.4.1             
-[49] XML_3.99-0.20               utf8_1.2.4                 
-[51] UCSC.utils_1.0.0            promises_1.3.0             
-[53] rmarkdown_2.26              XVector_0.44.0             
-[55] httr_1.4.7                  matrixStats_1.3.0          
-[57] workflowr_1.7.1             cellranger_1.1.0           
-[59] evaluate_0.23               knitr_1.46                 
-[61] BiocIO_1.14.0               rlang_1.1.3                
-[63] Rcpp_1.0.12                 glue_1.7.0                 
-[65] rstudioapi_0.16.0           jsonlite_1.8.8             
-[67] R6_2.5.1                    MatrixGenerics_1.16.0      
-[69] GenomicAlignments_1.40.0    fs_1.6.4                   
-[71] zlibbioc_1.50.0            </code></pre>
+[33] jquerylib_0.1.4             whisker_0.4.1              
+[35] BiocParallel_1.38.0         DelayedArray_0.30.1        
+[37] cachem_1.0.8                abind_1.4-5                
+[39] tidyselect_1.2.1            digest_0.6.35              
+[41] stringi_1.8.4               restfulr_0.0.16            
+[43] grid_4.4.0                  rprojroot_2.0.4            
+[45] fastmap_1.1.1               SparseArray_1.4.8          
+[47] cli_3.6.2                   magrittr_2.0.3             
+[49] S4Arrays_1.4.1              XML_3.99-0.20              
+[51] utf8_1.2.4                  UCSC.utils_1.0.0           
+[53] promises_1.3.0              rmarkdown_2.26             
+[55] XVector_0.44.0              httr_1.4.7                 
+[57] matrixStats_1.3.0           workflowr_1.7.1            
+[59] cellranger_1.1.0            evaluate_0.23              
+[61] knitr_1.46                  BiocIO_1.14.0              
+[63] rlang_1.1.3                 Rcpp_1.0.12                
+[65] glue_1.7.0                  rstudioapi_0.16.0          
+[67] jsonlite_1.8.8              R6_2.5.1                   
+[69] MatrixGenerics_1.16.0       GenomicAlignments_1.40.0   
+[71] fs_1.6.4                    zlibbioc_1.50.0            </code></pre>
 </div>
 
 
