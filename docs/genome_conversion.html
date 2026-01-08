@@ -400,7 +400,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2025-12-22
+<strong>Last updated:</strong> 2026-01-08
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree31f76a0b49bbe6148410b1fa3c6860de1619a3e0targetblank31f76a0a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6targetblank2b2e9dda">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/31f76a0b49bbe6148410b1fa3c6860de1619a3e0" target="_blank">31f76a0</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6" target="_blank">2b2e9dd</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree31f76a0b49bbe6148410b1fa3c6860de1619a3e0targetblank31f76a0a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6targetblank2b2e9dda"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/31f76a0b49bbe6148410b1fa3c6860de1619a3e0" target="_blank">31f76a0</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6" target="_blank">2b2e9dd</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -613,6 +613,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6/analysis/genome_conversion.Rmd" target="_blank">2b2e9dd</a>
+</td>
+<td>
+han
+</td>
+<td>
+2025-12-22
+</td>
+<td>
+12/22/2025
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6/docs/genome_conversion.html" target="_blank">2b2e9dd</a>
+</td>
+<td>
+han
+</td>
+<td>
+2025-12-22
+</td>
+<td>
+12/22/2025
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -692,53 +726,130 @@ flx_enhancer_mm10 &lt;- GRanges(
   ranges   = IRanges(start = flx_enhancer[[2]],
                      end   = flx_enhancer[[3]])
 )</code></pre>
-<pre class="r"><code>chain &lt;- import.chain(paste0(path2, &quot;mm10ToHg19.over.chain&quot;))
+<pre class="r"><code>filter_liftover_by_coverage &lt;- function(lifted, orig_width, tau ) {
+  stopifnot(
+    inherits(lifted, &quot;GRangesList&quot;),
+    length(lifted) == length(orig_width)
+  )
+
+  filtered &lt;- GRangesList(
+    lapply(seq_along(lifted), function(i) {
+      frags &lt;- lifted[[i]]
+      if (length(frags) == 0) return(GRanges())
+
+      keep &lt;- width(frags) / orig_width[i] &gt;= tau  # keep hg38 windows that is at least tau% overlapping with mm10 windows in size , # e.g. keep fragments covering ≥tau% of original window
+      frags[keep]
+    })
+  )
+
+  # drop empty elements
+  filtered[elementNROWS(filtered) &gt; 0]
+}</code></pre>
+<pre class="r"><code>chain &lt;- import.chain(paste0(path2, &quot;mm10ToHg38.over.chain&quot;))
 
 
 # perform liftover 
-cre_enhancer_mm10_to_hg19 &lt;- liftOver(cre_enhancer_mm10, chain)
+cre_enhancer_mm10_to_hg38 &lt;- liftOver(cre_enhancer_mm10, chain)
+flx_enhancer_mm10_to_hg38 &lt;- liftOver(flx_enhancer_mm10, chain)</code></pre>
+<pre class="r"><code>tau_seq=c(0, 0.05, 0.1, 0.3, 0.5)
+hg38_window_number=numeric()
+for (i in 1:length(tau_seq))
+{
+  cat(tau_seq[i], &quot;is running&quot;, &quot;\n&quot;)
+  
+cre_lifted_filtered &lt;- filter_liftover_by_coverage(
+  lifted = cre_enhancer_mm10_to_hg38,
+  orig_width = width(cre_enhancer_mm10),
+  tau = tau_seq[i]
+)
 
-# Some mm10 regions map to multiple human regions — flatten to keep all
-cre_enhancer_mm10_to_hg19 &lt;- unlist(cre_enhancer_mm10_to_hg19)
+hg38_window_number[i]=length(unlist(cre_lifted_filtered))
+}
 
+hg38_window_number</code></pre>
+<pre class="r"><code>library(ggplot2)
+df &lt;- data.frame(
+  tau = factor(c(0, 0.05, 0.1, 0.3, 0.5),
+               levels = c(0, 0.05, 0.1, 0.3, 0.5)),
+  hg38_windows = c(549272, 74907, 28595, 3122, 892)
+)
 
-flx_enhancer_mm10_to_hg19 &lt;- liftOver(flx_enhancer_mm10, chain)
+ggplot(df, aes(x = tau, y = hg38_windows)) +
+  geom_col(fill = &quot;blue&quot;) +
+  geom_text(aes(label = hg38_windows),
+            vjust = -0.3, size = 4) +
+  geom_hline(yintercept = 23895, linetype = &quot;dashed&quot;, col=&quot;red&quot;) +
+  labs(
+    title = &quot;cre_enhancer&quot;,
+    x = expression(tau),
+    y = &quot;Number of hg38 windows&quot;
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )</code></pre>
+<p><img src="figure/genome_conversion.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tau_seq=c(0, 0.05, 0.1, 0.3, 0.5)
+hg38_window_number=numeric()
+for (i in 1:length(tau_seq))
+{
+  cat(tau_seq[i], &quot;is running&quot;, &quot;\n&quot;)
+  
+flx_lifted_filtered &lt;- filter_liftover_by_coverage(
+  lifted = flx_enhancer_mm10_to_hg38,
+  orig_width = width(flx_enhancer_mm10),
+  tau = tau_seq[i]
+)
 
-# Some mm10 regions map to multiple human regions — flatten to keep all
-flx_enhancer_mm10_to_hg19 &lt;- unlist(flx_enhancer_mm10_to_hg19)</code></pre>
+hg38_window_number[i]=length(unlist(flx_lifted_filtered))
+}
+
+hg38_window_number</code></pre>
+<pre class="r"><code>library(ggplot2)
+df &lt;- data.frame(
+  tau = factor(c(0, 0.05, 0.1, 0.3, 0.5),
+               levels = c(0, 0.05, 0.1, 0.3, 0.5)),
+  hg38_windows = c(1020086, 154151, 58988, 6351, 1791)
+)
+
+ggplot(df, aes(x = tau, y = hg38_windows)) +
+  geom_col(fill = &quot;blue&quot;) +
+  geom_text(aes(label = hg38_windows),
+            vjust = -0.3, size = 4) +
+  geom_hline(yintercept = 48640, linetype = &quot;dashed&quot;, col=&quot;red&quot;) +
+  labs(
+    title = &quot;flx_enhancer&quot;,
+    x = expression(tau),
+    y = &quot;Number of hg38 windows&quot;
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )</code></pre>
+<p><img src="figure/genome_conversion.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cre_enhancer_hg38=data.frame(
+  chr = as.character(seqnames(unlist(cre_lifted_filtered))),
+  start = start(unlist(cre_lifted_filtered)),
+  end = end(unlist(cre_lifted_filtered))
+)</code></pre>
 <pre class="r"><code># Convert to data frame
-cre_enhancer_hg19 &lt;- data.frame(
-  chr = as.character(seqnames(cre_enhancer_mm10_to_hg19)),
-  start = start(cre_enhancer_mm10_to_hg19),
-  end = end(cre_enhancer_mm10_to_hg19)
+cre_enhancer_hg38 &lt;- data.frame(
+  chr = as.character(seqnames(cre_enhancer_mm10_to_hg38)),
+  start = start(cre_enhancer_mm10_to_hg38),
+  end = end(cre_enhancer_mm10_to_hg38)
 )
 
-flx_enhancer_hg19 &lt;- data.frame(
-  chr = as.character(seqnames(flx_enhancer_mm10_to_hg19)),
-  start = start(flx_enhancer_mm10_to_hg19),
-  end = end(flx_enhancer_mm10_to_hg19)
+flx_enhancer_hg38 &lt;- data.frame(
+  chr = as.character(seqnames(flx_enhancer_mm10_to_hg38)),
+  start = start(flx_enhancer_mm10_to_hg38),
+  end = end(flx_enhancer_mm10_to_hg38)
 )
 
-dim(cre_enhancer_hg19)</code></pre>
-<pre><code>[1] 579666      3</code></pre>
-<pre class="r"><code>head(cre_enhancer_hg19)</code></pre>
-<pre><code>   chr    start      end
-1 chr8 56142555 56142576
-2 chr8 56142528 56142550
-3 chr8 56142514 56142525
-4 chr8 56142472 56142513
-5 chr8 56142460 56142470
-6 chr8 54793747 54793750</code></pre>
-<pre class="r"><code>dim(flx_enhancer_hg19)</code></pre>
-<pre><code>[1] 1084125       3</code></pre>
-<pre class="r"><code>head(flx_enhancer_hg19)</code></pre>
-<pre><code>   chr    start      end
-1 chr8 56138109 56138119
-2 chr8 56138002 56138102
-3 chr8 56137976 56137991
-4 chr8 56137965 56137974
-5 chr8 56137951 56137963
-6 chr8 56137947 56137950</code></pre>
+dim(cre_enhancer_hg38)
+head(cre_enhancer_hg38)
+
+dim(flx_enhancer_hg38)
+head(flx_enhancer_hg38)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -770,47 +881,51 @@ attached base packages:
 [8] base     
 
 other attached packages:
-[1] rtracklayer_1.64.0   GenomicRanges_1.56.2 GenomeInfoDb_1.40.0 
-[4] IRanges_2.38.0       S4Vectors_0.42.0     BiocGenerics_0.50.0 
-[7] dplyr_1.1.4          readxl_1.4.3        
+[1] ggplot2_3.5.1        rtracklayer_1.64.0   GenomicRanges_1.56.2
+[4] GenomeInfoDb_1.40.0  IRanges_2.38.0       S4Vectors_0.42.0    
+[7] BiocGenerics_0.50.0  dplyr_1.1.4          readxl_1.4.3        
 
 loaded via a namespace (and not attached):
- [1] SummarizedExperiment_1.34.0 rjson_0.2.23               
- [3] xfun_0.43                   bslib_0.7.0                
- [5] lattice_0.22-6              Biobase_2.64.0             
- [7] vctrs_0.6.5                 tools_4.4.0                
- [9] bitops_1.0-7                generics_0.1.3             
-[11] curl_5.2.1                  parallel_4.4.0             
-[13] tibble_3.2.1                fansi_1.0.6                
-[15] pkgconfig_2.0.3             Matrix_1.7-0               
-[17] lifecycle_1.0.4             GenomeInfoDbData_1.2.12    
-[19] compiler_4.4.0              stringr_1.5.1              
-[21] git2r_0.33.0                Rsamtools_2.20.0           
-[23] Biostrings_2.72.0           codetools_0.2-20           
-[25] httpuv_1.6.15               htmltools_0.5.8.1          
-[27] sass_0.4.9                  RCurl_1.98-1.16            
-[29] yaml_2.3.8                  later_1.3.2                
-[31] pillar_1.9.0                crayon_1.5.2               
-[33] jquerylib_0.1.4             whisker_0.4.1              
-[35] BiocParallel_1.38.0         DelayedArray_0.30.1        
-[37] cachem_1.0.8                abind_1.4-5                
-[39] tidyselect_1.2.1            digest_0.6.35              
-[41] stringi_1.8.4               restfulr_0.0.16            
-[43] grid_4.4.0                  rprojroot_2.0.4            
-[45] fastmap_1.1.1               SparseArray_1.4.8          
-[47] cli_3.6.2                   magrittr_2.0.3             
-[49] S4Arrays_1.4.1              XML_3.99-0.20              
-[51] utf8_1.2.4                  UCSC.utils_1.0.0           
-[53] promises_1.3.0              rmarkdown_2.26             
-[55] XVector_0.44.0              httr_1.4.7                 
-[57] matrixStats_1.3.0           workflowr_1.7.1            
-[59] cellranger_1.1.0            evaluate_0.23              
-[61] knitr_1.46                  BiocIO_1.14.0              
-[63] rlang_1.1.3                 Rcpp_1.0.12                
-[65] glue_1.7.0                  rstudioapi_0.16.0          
-[67] jsonlite_1.8.8              R6_2.5.1                   
-[69] MatrixGenerics_1.16.0       GenomicAlignments_1.40.0   
-[71] fs_1.6.4                    zlibbioc_1.50.0            </code></pre>
+ [1] SummarizedExperiment_1.34.0 gtable_0.3.5               
+ [3] rjson_0.2.23                xfun_0.43                  
+ [5] bslib_0.7.0                 lattice_0.22-6             
+ [7] Biobase_2.64.0              vctrs_0.6.5                
+ [9] tools_4.4.0                 bitops_1.0-7               
+[11] generics_0.1.3              curl_5.2.1                 
+[13] parallel_4.4.0              tibble_3.2.1               
+[15] fansi_1.0.6                 highr_0.10                 
+[17] pkgconfig_2.0.3             Matrix_1.7-0               
+[19] lifecycle_1.0.4             GenomeInfoDbData_1.2.12    
+[21] farver_2.1.2                compiler_4.4.0             
+[23] stringr_1.5.1               git2r_0.33.0               
+[25] Rsamtools_2.20.0            Biostrings_2.72.0          
+[27] munsell_0.5.1               codetools_0.2-20           
+[29] httpuv_1.6.15               htmltools_0.5.8.1          
+[31] sass_0.4.9                  RCurl_1.98-1.16            
+[33] yaml_2.3.8                  later_1.3.2                
+[35] pillar_1.9.0                crayon_1.5.2               
+[37] jquerylib_0.1.4             whisker_0.4.1              
+[39] BiocParallel_1.38.0         DelayedArray_0.30.1        
+[41] cachem_1.0.8                abind_1.4-5                
+[43] tidyselect_1.2.1            digest_0.6.35              
+[45] stringi_1.8.4               restfulr_0.0.16            
+[47] labeling_0.4.3              grid_4.4.0                 
+[49] rprojroot_2.0.4             fastmap_1.1.1              
+[51] colorspace_2.1-0            SparseArray_1.4.8          
+[53] cli_3.6.2                   magrittr_2.0.3             
+[55] S4Arrays_1.4.1              XML_3.99-0.20              
+[57] utf8_1.2.4                  withr_3.0.0                
+[59] scales_1.3.0                UCSC.utils_1.0.0           
+[61] promises_1.3.0              rmarkdown_2.26             
+[63] XVector_0.44.0              httr_1.4.7                 
+[65] matrixStats_1.3.0           workflowr_1.7.1            
+[67] cellranger_1.1.0            evaluate_0.23              
+[69] knitr_1.46                  BiocIO_1.14.0              
+[71] rlang_1.1.3                 Rcpp_1.0.12                
+[73] glue_1.7.0                  rstudioapi_0.16.0          
+[75] jsonlite_1.8.8              R6_2.5.1                   
+[77] MatrixGenerics_1.16.0       GenomicAlignments_1.40.0   
+[79] fs_1.6.4                    zlibbioc_1.50.0            </code></pre>
 </div>
 
 

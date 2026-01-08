@@ -22,7 +22,7 @@ library(rtracklayer)
 
 ```{r, echo=F, message=F, warning=F}
 path1="C:\\han\\Projects\\ShareShengtong\\ShareShengtong\\EpiBmal1Cerebellum\\Draft\\Files\\"
-path2="C:\\han\\Projects\\2025_11_autism_epigenetics\\Data\\mm10ToHg19.over.chain\\"
+path2="C:\\han\\Projects\\2025_11_autism_epigenetics\\Data\\"
 ```
 
 
@@ -55,44 +55,178 @@ flx_enhancer_mm10 <- GRanges(
 
 
 ```{r, message=F, warning=F}
+filter_liftover_by_coverage <- function(lifted, orig_width, tau ) {
+  stopifnot(
+    inherits(lifted, "GRangesList"),
+    length(lifted) == length(orig_width)
+  )
 
-chain <- import.chain(paste0(path2, "mm10ToHg19.over.chain"))
+  filtered <- GRangesList(
+    lapply(seq_along(lifted), function(i) {
+      frags <- lifted[[i]]
+      if (length(frags) == 0) return(GRanges())
 
+      keep <- width(frags) / orig_width[i] >= tau  # keep hg38 windows that is at least tau% overlapping with mm10 windows in size , # e.g. keep fragments covering ≥tau% of original window
+      frags[keep]
+    })
+  )
 
-# perform liftover 
-cre_enhancer_mm10_to_hg19 <- liftOver(cre_enhancer_mm10, chain)
-
-# Some mm10 regions map to multiple human regions — flatten to keep all
-cre_enhancer_mm10_to_hg19 <- unlist(cre_enhancer_mm10_to_hg19)
-
-
-flx_enhancer_mm10_to_hg19 <- liftOver(flx_enhancer_mm10, chain)
-
-# Some mm10 regions map to multiple human regions — flatten to keep all
-flx_enhancer_mm10_to_hg19 <- unlist(flx_enhancer_mm10_to_hg19)
+  # drop empty elements
+  filtered[elementNROWS(filtered) > 0]
+}
 
 ```
 
 
+
+
+
+
 ```{r, message=F, warning=F}
+
+chain <- import.chain(paste0(path2, "mm10ToHg38.over.chain"))
+
+
+# perform liftover 
+cre_enhancer_mm10_to_hg38 <- liftOver(cre_enhancer_mm10, chain)
+flx_enhancer_mm10_to_hg38 <- liftOver(flx_enhancer_mm10, chain)
+
+```
+
+
+
+
+```{r, message=F, warning=F, eval=F}
+tau_seq=c(0, 0.05, 0.1, 0.3, 0.5)
+hg38_window_number=numeric()
+for (i in 1:length(tau_seq))
+{
+  cat(tau_seq[i], "is running", "\n")
+  
+cre_lifted_filtered <- filter_liftover_by_coverage(
+  lifted = cre_enhancer_mm10_to_hg38,
+  orig_width = width(cre_enhancer_mm10),
+  tau = tau_seq[i]
+)
+
+hg38_window_number[i]=length(unlist(cre_lifted_filtered))
+}
+
+hg38_window_number
+
+```
+
+```{r, message=F, warning=F}
+library(ggplot2)
+df <- data.frame(
+  tau = factor(c(0, 0.05, 0.1, 0.3, 0.5),
+               levels = c(0, 0.05, 0.1, 0.3, 0.5)),
+  hg38_windows = c(549272, 74907, 28595, 3122, 892)
+)
+
+ggplot(df, aes(x = tau, y = hg38_windows)) +
+  geom_col(fill = "blue") +
+  geom_text(aes(label = hg38_windows),
+            vjust = -0.3, size = 4) +
+  geom_hline(yintercept = 23895, linetype = "dashed", col="red") +
+  labs(
+    title = "cre_enhancer",
+    x = expression(tau),
+    y = "Number of hg38 windows"
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+
+
+
+
+
+```{r, message=F, warning=F, eval=F}
+tau_seq=c(0, 0.05, 0.1, 0.3, 0.5)
+hg38_window_number=numeric()
+for (i in 1:length(tau_seq))
+{
+  cat(tau_seq[i], "is running", "\n")
+  
+flx_lifted_filtered <- filter_liftover_by_coverage(
+  lifted = flx_enhancer_mm10_to_hg38,
+  orig_width = width(flx_enhancer_mm10),
+  tau = tau_seq[i]
+)
+
+hg38_window_number[i]=length(unlist(flx_lifted_filtered))
+}
+
+hg38_window_number
+
+```
+
+
+
+```{r, message=F, warning=F}
+library(ggplot2)
+df <- data.frame(
+  tau = factor(c(0, 0.05, 0.1, 0.3, 0.5),
+               levels = c(0, 0.05, 0.1, 0.3, 0.5)),
+  hg38_windows = c(1020086, 154151, 58988, 6351, 1791)
+)
+
+ggplot(df, aes(x = tau, y = hg38_windows)) +
+  geom_col(fill = "blue") +
+  geom_text(aes(label = hg38_windows),
+            vjust = -0.3, size = 4) +
+  geom_hline(yintercept = 48640, linetype = "dashed", col="red") +
+  labs(
+    title = "flx_enhancer",
+    x = expression(tau),
+    y = "Number of hg38 windows"
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+
+
+
+```{r, message=F, warning=F, eval=F}
+cre_enhancer_hg38=data.frame(
+  chr = as.character(seqnames(unlist(cre_lifted_filtered))),
+  start = start(unlist(cre_lifted_filtered)),
+  end = end(unlist(cre_lifted_filtered))
+)
+```
+
+
+
+
+
+
+
+```{r, message=F, warning=F, eval=F}
 # Convert to data frame
-cre_enhancer_hg19 <- data.frame(
-  chr = as.character(seqnames(cre_enhancer_mm10_to_hg19)),
-  start = start(cre_enhancer_mm10_to_hg19),
-  end = end(cre_enhancer_mm10_to_hg19)
+cre_enhancer_hg38 <- data.frame(
+  chr = as.character(seqnames(cre_enhancer_mm10_to_hg38)),
+  start = start(cre_enhancer_mm10_to_hg38),
+  end = end(cre_enhancer_mm10_to_hg38)
 )
 
-flx_enhancer_hg19 <- data.frame(
-  chr = as.character(seqnames(flx_enhancer_mm10_to_hg19)),
-  start = start(flx_enhancer_mm10_to_hg19),
-  end = end(flx_enhancer_mm10_to_hg19)
+flx_enhancer_hg38 <- data.frame(
+  chr = as.character(seqnames(flx_enhancer_mm10_to_hg38)),
+  start = start(flx_enhancer_mm10_to_hg38),
+  end = end(flx_enhancer_mm10_to_hg38)
 )
 
-dim(cre_enhancer_hg19)
-head(cre_enhancer_hg19)
+dim(cre_enhancer_hg38)
+head(cre_enhancer_hg38)
 
-dim(flx_enhancer_hg19)
-head(flx_enhancer_hg19)
+dim(flx_enhancer_hg38)
+head(flx_enhancer_hg38)
 ```
 
 
