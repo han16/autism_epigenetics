@@ -379,7 +379,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -390,8 +390,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -404,9 +404,9 @@ aria-hidden="true"></span> </a>
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>autism_epigenetics/</code> <span
@@ -429,21 +429,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -534,15 +531,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6targetblank2b2e9dda">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree63f3b3b088465f771aec83db827967774595c9b5targetblank63f3b3ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6" target="_blank">2b2e9dd</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/63f3b3b088465f771aec83db827967774595c9b5" target="_blank">63f3b3b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6targetblank2b2e9dda"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree63f3b3b088465f771aec83db827967774595c9b5targetblank63f3b3ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +549,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/2b2e9dd5cdab7f9a55322e24c99b074c62fab7c6" target="_blank">2b2e9dd</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/63f3b3b088465f771aec83db827967774595c9b5" target="_blank">63f3b3b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -566,9 +563,7 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Unstaged changes:
-    Modified:   analysis/genome_conversion.Rmd
-
+working directory clean
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not
@@ -613,6 +608,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/63f3b3b088465f771aec83db827967774595c9b5/analysis/genome_conversion.Rmd" target="_blank">63f3b3b</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-01-08
+</td>
+<td>
+1/8/2026
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/63f3b3b088465f771aec83db827967774595c9b5/docs/genome_conversion.html" target="_blank">63f3b3b</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-01-08
+</td>
+<td>
+1/8/2026
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -789,6 +818,43 @@ ggplot(df, aes(x = tau, y = hg38_windows)) +
     plot.title = element_text(hjust = 0.5)
   )</code></pre>
 <p><img src="figure/genome_conversion.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/63f3b3b088465f771aec83db827967774595c9b5/docs/figure/genome_conversion.Rmd/unnamed-chunk-8-1.png" target="_blank">63f3b3b</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-01-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>tau_seq=c(0, 0.05, 0.1, 0.3, 0.5)
 hg38_window_number=numeric()
 for (i in 1:length(tau_seq))
@@ -827,6 +893,43 @@ ggplot(df, aes(x = tau, y = hg38_windows)) +
     plot.title = element_text(hjust = 0.5)
   )</code></pre>
 <p><img src="figure/genome_conversion.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/63f3b3b088465f771aec83db827967774595c9b5/docs/figure/genome_conversion.Rmd/unnamed-chunk-10-1.png" target="_blank">63f3b3b</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-01-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cre_enhancer_hg38=data.frame(
   chr = as.character(seqnames(unlist(cre_lifted_filtered))),
   start = start(unlist(cre_lifted_filtered)),
