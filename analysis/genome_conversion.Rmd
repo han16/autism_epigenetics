@@ -67,6 +67,7 @@ filter_liftover_by_coverage <- function(lifted, orig_width, tau ) {
       if (length(frags) == 0) return(GRanges())
 
       keep <- width(frags) / orig_width[i] >= tau  # keep hg38 windows that is at least tau% overlapping with mm10 windows in size , # e.g. keep fragments covering ≥tau% of original window
+      #Keep hg38 fragments whose aligned length is at least τ × the mm10 window length
       frags[keep]
     })
   )
@@ -204,6 +205,75 @@ cre_enhancer_hg38=data.frame(
 
 
 
+
+
+
+## window length distribution 
+
+
+
+```{r, message=F, warning=F, eval=F}
+cre_lifted_filtered <- filter_liftover_by_coverage(
+  lifted = cre_enhancer_mm10_to_hg38,
+  orig_width = width(cre_enhancer_mm10),
+  tau = 0.1)
+#saveRDS(cre_lifted_filtered, file=paste0(path2, "cre_lifted_filtered_tau01.RDS"))
+```
+
+
+```{r, message=F, warning=F}
+
+cre_lifted_filtered=readRDS(paste0(path2, "cre_lifted_filtered_tau01.RDS"))
+window_lengths <- width(unlist(cre_lifted_filtered))
+
+df <- data.frame(length = window_lengths)
+
+ggplot(df, aes(x = length)) +
+  geom_histogram(bins = 50, fill = "blue", color = "black") +
+  theme_classic() +
+  labs(
+    title = "cre_enhancer: tau=10%",
+    x = "Window length (bp)",
+    y = "Count"
+  )+
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+summary(window_lengths)
+```
+
+
+
+```{r, message=F, warning=F, eval=F}
+flx_lifted_filtered <- filter_liftover_by_coverage(
+  lifted = flx_enhancer_mm10_to_hg38,
+  orig_width = width(flx_enhancer_mm10),
+  tau = 0.1)
+#saveRDS(flx_lifted_filtered, file=paste0(path2, "flx_lifted_filtered_tau01.RDS"))
+```
+
+
+
+```{r, message=F, warning=F}
+
+flx_lifted_filtered=readRDS(paste0(path2, "flx_lifted_filtered_tau01.RDS"))
+window_lengths <- width(unlist(flx_lifted_filtered))
+
+df <- data.frame(length = window_lengths)
+
+ggplot(df, aes(x = length)) +
+  geom_histogram(bins = 50, fill = "blue", color = "black") +
+  theme_classic() +
+  labs(
+    title = "flx_enhancer: tau=10%",
+    x = "Window length (bp)",
+    y = "Count"
+  )+
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+summary(window_lengths)
+```
 
 
 
