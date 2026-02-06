@@ -1,0 +1,180 @@
+---
+title: "figure 1"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+date: "2026-02-06"
+---
+
+
+
+```{r, message=F, warning=F}
+library(rprojroot)
+library(dplyr)
+root <- rprojroot::find_rstudio_root_file()
+```
+
+
+```{r, message=F, warning=F}
+union_peak_reads_count=read.delim((file.path(root, "../Data/Novogene/PeakWindows/Cere_union_peak_read_counts.tsv")), header=T, stringsAsFactors = FALSE)
+dim(union_peak_reads_count)
+head(union_peak_reads_count)
+```
+
+
+
+
+
+```{r, message=F, warning=F}
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("DESeq2")
+
+
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("apeglm")
+
+
+
+
+library(DESeq2)
+library(apeglm)
+
+# ----------------------------
+# Prepare count matrix
+# ----------------------------
+count_mat <- as.matrix(
+  union_peak_reads_count[, c("C1", "C2", "K1", "K2")]
+)
+
+rownames(count_mat) <- paste(
+  union_peak_reads_count$chr,
+  union_peak_reads_count$start,
+  union_peak_reads_count$end,
+  sep = ":"
+)
+
+# Ensure integer mode (important for DESeq2)
+storage.mode(count_mat) <- "integer"
+
+# ----------------------------
+# Sample metadata
+# ----------------------------
+coldata <- data.frame(
+  condition = c("C", "C", "K", "K"),
+  row.names = colnames(count_mat)
+)
+
+# ----------------------------
+# Create DESeq2 object
+# ----------------------------
+dds <- DESeqDataSetFromMatrix(
+  countData = count_mat,
+  colData   = coldata,
+  design    = ~ condition
+)
+
+# ----------------------------
+# Optional but recommended: filter low counts
+# ----------------------------
+keep <- rowSums(counts(dds)) >= 10
+dds <- dds[keep, ]
+
+# ----------------------------
+# Run DESeq2
+# ----------------------------
+dds <- DESeq(dds)
+
+# ----------------------------
+# Results: K vs C
+# ----------------------------
+res <- results(dds, contrast = c("condition", "K", "C"))
+
+head(res)
+
+# Shrink log2FC (recommended for ATAC-seq)
+#res_shrunk <- lfcShrink(
+#  dds,
+#  contrast = c("condition", "K", "C"),
+#  type = "apeglm"
+#)
+
+# Order by adjusted p-value
+#res_shrunk <- res_shrunk[order(res_shrunk$padj), ]
+#
+#head(res_shrunk)
+
+```
+
+
+
+```{r, message=F, warning=F}
+library(dplyr)
+library(ggplot2)
+
+
+log2FC_cut <- 0.38
+pval_cut   <- 0.05
+
+
+library(dplyr)
+
+plot_df <- as.data.frame(res) %>%
+  mutate(
+    mean_expr = baseMean,
+    neglogp   = -log10(pvalue),
+    Typechange = case_when(
+      pvalue < pval_cut & log2FoldChange >=  log2FC_cut  ~ "Gained",
+      pvalue < pval_cut & log2FoldChange <= -log2FC_cut  ~ "Lost",
+      TRUE                                               ~ "unchange"
+    )
+  )
+plot_df$neglogp <- pmin(plot_df$neglogp, 15)
+
+
+```
+
+
+
+```{r, message=F, warning=F}
+library(ggplot2)
+
+ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
+  geom_point(
+    aes(color = Typechange, size = neglogp),
+    alpha = 0.6
+  ) +
+  scale_x_log10() +
+  geom_hline(yintercept = 0, color = "blue", linewidth = 1) +
+  geom_hline(
+    yintercept = c(-log2FC_cut, log2FC_cut),
+    linetype = "dashed",
+    color = "black"
+  ) +
+  scale_color_manual(
+    values = c(
+      "Gained"   = "#F8766D",
+      "Lost"     = "#00BA38",
+      "unchange" = "#619CFF"
+    )
+  ) +
+  scale_size_continuous(
+    range = c(1, 6),
+    name = "-log10(pvalue)"
+  ) +
+  labs(
+    x = "Log Mean expression",
+    y = "Log2 Fold Change",
+    color = "Typechange"
+  ) +
+  theme_bw(base_size = 14) +
+  theme(
+    panel.grid.major = element_line(color = "grey90"),
+    panel.grid.minor = element_blank()
+  )
+
+```
