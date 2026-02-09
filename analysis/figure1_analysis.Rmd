@@ -10,6 +10,7 @@ date: "2026-02-06"
 
 
 ```{r, message=F, warning=F}
+rm(list=ls())
 library(rprojroot)
 library(dplyr)
 root <- rprojroot::find_rstudio_root_file()
@@ -81,8 +82,8 @@ dds <- DESeqDataSetFromMatrix(
 # ----------------------------
 # Optional but recommended: filter low counts
 # ----------------------------
-keep <- rowSums(counts(dds)) >= 10
-dds <- dds[keep, ]
+#keep <- rowSums(counts(dds)) >= 10
+#dds <- dds[keep, ]
 
 # ----------------------------
 # Run DESeq2
@@ -128,9 +129,9 @@ plot_df <- as.data.frame(res) %>%
     mean_expr = baseMean,
     neglogp   = -log10(pvalue),
     Typechange = case_when(
-      pvalue < pval_cut & log2FoldChange >=  log2FC_cut  ~ "Gained",
-      pvalue < pval_cut & log2FoldChange <= -log2FC_cut  ~ "Lost",
-      TRUE                                               ~ "unchange"
+      pvalue < pval_cut & log2FoldChange >=  log2FC_cut  ~ "Enhanced",
+      pvalue < pval_cut & log2FoldChange <= -log2FC_cut  ~ "Weakened",
+      TRUE                                               ~ "Unchanged"
     )
   )
 plot_df$neglogp <- pmin(plot_df$neglogp, 15)
@@ -157,9 +158,9 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
   ) +
   scale_color_manual(
     values = c(
-      "Gained"   = "#F8766D",
-      "Lost"     = "#00BA38",
-      "unchange" = "#619CFF"
+      "Enhanced"   = "#F8766D",
+      "Weakened"     = "#00BA38",
+      "Unchanged" = "#619CFF"
     )
   ) +
   scale_size_continuous(

@@ -400,7 +400,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-02-06
+<strong>Last updated:</strong> 2026-02-09
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -438,10 +438,10 @@ changes </a>
 <div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R
-Markdown file created these results, you’ll want to first commit it to
-the Git repo. If you’re still working on the analysis, you can ignore
-this warning. When you’re finished, you can run
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
 <code>wflow_publish</code> to commit the R Markdown file and build the
 HTML.</p>
 </div>
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreef112695dbaa315e8851e9546f3ba7d4b98521241targetblankf112695a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree98e85d668473b2bc884aa603ecd396332aa110c6targetblank98e85d6a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/f112695dbaa315e8851e9546f3ba7d4b98521241" target="_blank">f112695</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/98e85d668473b2bc884aa603ecd396332aa110c6" target="_blank">98e85d6</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreef112695dbaa315e8851e9546f3ba7d4b98521241targetblankf112695a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree98e85d668473b2bc884aa603ecd396332aa110c6targetblank98e85d6a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/f112695dbaa315e8851e9546f3ba7d4b98521241" target="_blank">f112695</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/98e85d668473b2bc884aa603ecd396332aa110c6" target="_blank">98e85d6</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -566,11 +566,8 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Untracked files:
-    Untracked:  analysis/figure1_analysis.Rmd
-
 Unstaged changes:
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/figure1_analysis.Rmd
 
 </code></pre>
 <p>
@@ -585,15 +582,97 @@ have uncommitted changes.
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with
-<code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/figure1_analysis.Rmd</code>) and
+HTML (<code>docs/figure1_analysis.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/98e85d668473b2bc884aa603ecd396332aa110c6/docs/figure1_analysis.html" target="_blank">98e85d6</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-06
+</td>
+<td>
+2/6/2026
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/85aa352d46f4a180cef7237d1179c4c86f7c4fc8/analysis/figure1_analysis.Rmd" target="_blank">85aa352</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-06
+</td>
+<td>
+2/6/2026
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/85aa352d46f4a180cef7237d1179c4c86f7c4fc8/docs/figure1_analysis.html" target="_blank">85aa352</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-06
+</td>
+<td>
+2/6/2026
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
 </div>
-<pre class="r"><code>library(rprojroot)
+<pre class="r"><code>rm(list=ls())
+library(rprojroot)
 library(dplyr)
 root &lt;- rprojroot::find_rstudio_root_file()</code></pre>
 <pre class="r"><code>union_peak_reads_count=read.delim((file.path(root, &quot;../Data/Novogene/PeakWindows/Cere_union_peak_read_counts.tsv&quot;)), header=T, stringsAsFactors = FALSE)
@@ -661,8 +740,8 @@ dds &lt;- DESeqDataSetFromMatrix(
 # ----------------------------
 # Optional but recommended: filter low counts
 # ----------------------------
-keep &lt;- rowSums(counts(dds)) &gt;= 10
-dds &lt;- dds[keep, ]
+#keep &lt;- rowSums(counts(dds)) &gt;= 10
+#dds &lt;- dds[keep, ]
 
 # ----------------------------
 # Run DESeq2
@@ -680,20 +759,20 @@ Wald test p-value: condition K vs C
 DataFrame with 6 rows and 6 columns
                       baseMean log2FoldChange     lfcSE      stat    pvalue
                      &lt;numeric&gt;      &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
-chr1:3083877:3084023    9.3194      -1.805230  1.457366  -1.23869 0.2154590
-chr1:3120283:3120658   60.5243      -0.474142  0.548566  -0.86433 0.3874068
-chr1:3128676:3128999   14.6664       2.645541  1.145244   2.31002 0.0208868
-chr1:3149871:3150061   19.1308      -1.721634  0.966135  -1.78198 0.0747525
-chr1:3251199:3251666   44.1007      -0.808456  0.676079  -1.19580 0.2317743
-chr1:3300549:3300826   21.6822      -1.639670  0.957786  -1.71194 0.0869082
+chr1:3083877:3084023    9.3194      -1.805230  1.457376 -1.238685 0.2154620
+chr1:3120283:3120658   60.5243      -0.474142  0.548569 -0.864324 0.3874098
+chr1:3128676:3128999   14.6664       2.645541  1.145251  2.310009 0.0208876
+chr1:3149871:3150061   19.1308      -1.721634  0.966142 -1.781968 0.0747545
+chr1:3251199:3251666   44.1007      -0.808456  0.676084 -1.195794 0.2317771
+chr1:3300549:3300826   21.6822      -1.639670  0.957792 -1.711926 0.0869102
                           padj
                      &lt;numeric&gt;
-chr1:3083877:3084023  0.693036
-chr1:3120283:3120658  0.763795
-chr1:3128676:3128999  0.565266
-chr1:3149871:3150061  0.629214
-chr1:3251199:3251666  0.699921
-chr1:3300549:3300826  0.637312</code></pre>
+chr1:3083877:3084023  0.693042
+chr1:3120283:3120658  0.763792
+chr1:3128676:3128999  0.565293
+chr1:3149871:3150061  0.629236
+chr1:3251199:3251666  0.699926
+chr1:3300549:3300826  0.637331</code></pre>
 <pre class="r"><code># Shrink log2FC (recommended for ATAC-seq)
 #res_shrunk &lt;- lfcShrink(
 #  dds,
@@ -720,9 +799,9 @@ plot_df &lt;- as.data.frame(res) %&gt;%
     mean_expr = baseMean,
     neglogp   = -log10(pvalue),
     Typechange = case_when(
-      pvalue &lt; pval_cut &amp; log2FoldChange &gt;=  log2FC_cut  ~ &quot;Gained&quot;,
-      pvalue &lt; pval_cut &amp; log2FoldChange &lt;= -log2FC_cut  ~ &quot;Lost&quot;,
-      TRUE                                               ~ &quot;unchange&quot;
+      pvalue &lt; pval_cut &amp; log2FoldChange &gt;=  log2FC_cut  ~ &quot;Enhanced&quot;,
+      pvalue &lt; pval_cut &amp; log2FoldChange &lt;= -log2FC_cut  ~ &quot;Weakened&quot;,
+      TRUE                                               ~ &quot;Unchanged&quot;
     )
   )
 plot_df$neglogp &lt;- pmin(plot_df$neglogp, 15)</code></pre>
@@ -742,9 +821,9 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
   ) +
   scale_color_manual(
     values = c(
-      &quot;Gained&quot;   = &quot;#F8766D&quot;,
-      &quot;Lost&quot;     = &quot;#00BA38&quot;,
-      &quot;unchange&quot; = &quot;#619CFF&quot;
+      &quot;Enhanced&quot;   = &quot;#F8766D&quot;,
+      &quot;Weakened&quot;     = &quot;#00BA38&quot;,
+      &quot;Unchanged&quot; = &quot;#619CFF&quot;
     )
   ) +
   scale_size_continuous(
@@ -847,9 +926,9 @@ loaded via a namespace (and not attached):
 [16] GenomeInfoDbData_1.2.12 farver_2.1.2            compiler_4.4.0         
 [19] stringr_1.5.1           git2r_0.33.0            munsell_0.5.1          
 [22] codetools_0.2-20        httpuv_1.6.15           htmltools_0.5.8.1      
-[25] sass_0.4.9              yaml_2.3.8              whisker_0.4.1          
-[28] later_1.3.2             pillar_1.9.0            crayon_1.5.2           
-[31] jquerylib_0.1.4         MASS_7.3-60.2           BiocParallel_1.38.0    
+[25] sass_0.4.9              yaml_2.3.8              later_1.3.2            
+[28] pillar_1.9.0            crayon_1.5.2            jquerylib_0.1.4        
+[31] whisker_0.4.1           MASS_7.3-60.2           BiocParallel_1.38.0    
 [34] cachem_1.0.8            DelayedArray_0.30.1     emdbook_1.3.14         
 [37] abind_1.4-5             bdsmatrix_1.3-7         locfit_1.5-9.12        
 [40] tidyselect_1.2.1        digest_0.6.35           mvtnorm_1.3-3          
