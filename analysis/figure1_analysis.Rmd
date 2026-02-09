@@ -179,3 +179,94 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
   )
 
 ```
+
+
+
+```{r, message=F, warning=F}
+#################### normalize counts 
+library(DESeq2)
+
+count_mat <- as.matrix(count_mat)
+
+coldata <- data.frame(
+  row.names = colnames(count_mat),
+  condition = c("C", "C", "K", "K")
+)
+
+dds <- DESeqDataSetFromMatrix(
+  countData = count_mat,
+  colData = coldata,
+  design = ~ condition
+)
+
+# filter low-count peaks (important)
+dds <- dds[rowSums(counts(dds)) >= 10, ]
+
+# variance-stabilizing transform
+vsd <- vst(dds, blind = TRUE)
+
+mat <- assay(vsd)
+
+mat_scaled <- t(scale(t(mat)))
+
+dds <- DESeq(dds)
+res <- results(dds, contrast = c("condition", "K", "C"))
+
+# keep only peaks in matrix
+res <- res[rownames(mat_scaled), ]
+
+```
+
+
+```{r, message=F, warning=F}
+# ----------------------------
+# Apply significance cutoffs
+# ----------------------------
+res_filt <- res[
+  !is.na(res$pvalue) &
+  res$pvalue < pval_cut &
+  abs(res$log2FoldChange) >= log2FC_cut,
+]
+
+# Order by effect size
+res_filt <- res_filt[
+  order(abs(res_filt$log2FoldChange), decreasing = TRUE),
+]
+
+# Limit size (prevents clustering crash)
+topN <- min(5000, nrow(res_filt))
+res_filt <- res_filt[1:topN, , drop = FALSE]
+
+# ----------------------------
+# Subset matrix (CRITICAL drop=FALSE)
+# ----------------------------
+mat_filt <- mat_scaled[rownames(res_filt), , drop = FALSE]
+
+gained <- res_filt$log2FoldChange > 0
+lost   <- res_filt$log2FoldChange < 0
+
+mat_gained <- mat_filt[gained, , drop = FALSE]
+mat_lost   <- mat_filt[lost,   , drop = FALSE]
+
+mat_ordered <- rbind(mat_gained, mat_lost)
+
+```
+
+
+```{r, message=F, warning=F}
+
+library(pheatmap)
+
+pheatmap(
+  mat_ordered,
+  color = colorRampPalette(c("green", "white", "red"))(100),
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,
+  show_rownames = FALSE,
+  show_colnames = TRUE,
+  border_color = NA,
+  gaps_row = nrow(mat_gained),
+  fontsize_col = 12
+)
+
+```

@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree98e85d668473b2bc884aa603ecd396332aa110c6targetblank98e85d6a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5e48e7e7886700315eec5203bc459f774e73f1batargetblank5e48e7ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/98e85d668473b2bc884aa603ecd396332aa110c6" target="_blank">98e85d6</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/5e48e7e7886700315eec5203bc459f774e73f1ba" target="_blank">5e48e7e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree98e85d668473b2bc884aa603ecd396332aa110c6targetblank98e85d6a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5e48e7e7886700315eec5203bc459f774e73f1batargetblank5e48e7ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/98e85d668473b2bc884aa603ecd396332aa110c6" target="_blank">98e85d6</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/5e48e7e7886700315eec5203bc459f774e73f1ba" target="_blank">5e48e7e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -613,6 +613,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/5e48e7e7886700315eec5203bc459f774e73f1ba/analysis/figure1_analysis.Rmd" target="_blank">5e48e7e</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-09
+</td>
+<td>
+2/9/2026
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/5e48e7e7886700315eec5203bc459f774e73f1ba/docs/figure1_analysis.html" target="_blank">5e48e7e</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-09
+</td>
+<td>
+2/9/2026
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -865,6 +899,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/han16/autism_epigenetics/blob/5e48e7e7886700315eec5203bc459f774e73f1ba/docs/figure/figure1_analysis.Rmd/unnamed-chunk-5-1.png" target="_blank">5e48e7e</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/han16/autism_epigenetics/blob/85aa352d46f4a180cef7237d1179c4c86f7c4fc8/docs/figure/figure1_analysis.Rmd/unnamed-chunk-5-1.png" target="_blank">85aa352</a>
 </td>
 <td>
@@ -878,6 +923,81 @@ han
 </table>
 </div>
 </div>
+<pre class="r"><code>#################### normalize counts 
+library(DESeq2)
+
+count_mat &lt;- as.matrix(count_mat)
+
+coldata &lt;- data.frame(
+  row.names = colnames(count_mat),
+  condition = c(&quot;C&quot;, &quot;C&quot;, &quot;K&quot;, &quot;K&quot;)
+)
+
+dds &lt;- DESeqDataSetFromMatrix(
+  countData = count_mat,
+  colData = coldata,
+  design = ~ condition
+)
+
+# filter low-count peaks (important)
+dds &lt;- dds[rowSums(counts(dds)) &gt;= 10, ]
+
+# variance-stabilizing transform
+vsd &lt;- vst(dds, blind = TRUE)
+
+mat &lt;- assay(vsd)
+
+mat_scaled &lt;- t(scale(t(mat)))
+
+dds &lt;- DESeq(dds)
+res &lt;- results(dds, contrast = c(&quot;condition&quot;, &quot;K&quot;, &quot;C&quot;))
+
+# keep only peaks in matrix
+res &lt;- res[rownames(mat_scaled), ]</code></pre>
+<pre class="r"><code># ----------------------------
+# Apply significance cutoffs
+# ----------------------------
+res_filt &lt;- res[
+  !is.na(res$pvalue) &amp;
+  res$pvalue &lt; pval_cut &amp;
+  abs(res$log2FoldChange) &gt;= log2FC_cut,
+]
+
+# Order by effect size
+res_filt &lt;- res_filt[
+  order(abs(res_filt$log2FoldChange), decreasing = TRUE),
+]
+
+# Limit size (prevents clustering crash)
+topN &lt;- min(5000, nrow(res_filt))
+res_filt &lt;- res_filt[1:topN, , drop = FALSE]
+
+# ----------------------------
+# Subset matrix (CRITICAL drop=FALSE)
+# ----------------------------
+mat_filt &lt;- mat_scaled[rownames(res_filt), , drop = FALSE]
+
+gained &lt;- res_filt$log2FoldChange &gt; 0
+lost   &lt;- res_filt$log2FoldChange &lt; 0
+
+mat_gained &lt;- mat_filt[gained, , drop = FALSE]
+mat_lost   &lt;- mat_filt[lost,   , drop = FALSE]
+
+mat_ordered &lt;- rbind(mat_gained, mat_lost)</code></pre>
+<pre class="r"><code>library(pheatmap)
+
+pheatmap(
+  mat_ordered,
+  color = colorRampPalette(c(&quot;green&quot;, &quot;white&quot;, &quot;red&quot;))(100),
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,
+  show_rownames = FALSE,
+  show_colnames = TRUE,
+  border_color = NA,
+  gaps_row = nrow(mat_gained),
+  fontsize_col = 12
+)</code></pre>
+<p><img src="figure/figure1_analysis.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -909,40 +1029,41 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] ggplot2_3.5.1               apeglm_1.26.1              
- [3] DESeq2_1.44.0               SummarizedExperiment_1.34.0
- [5] Biobase_2.64.0              MatrixGenerics_1.16.0      
- [7] matrixStats_1.3.0           GenomicRanges_1.56.2       
- [9] GenomeInfoDb_1.40.0         IRanges_2.38.0             
-[11] S4Vectors_0.42.0            BiocGenerics_0.50.0        
-[13] dplyr_1.1.4                 rprojroot_2.0.4            
+ [1] pheatmap_1.0.12             ggplot2_3.5.1              
+ [3] apeglm_1.26.1               DESeq2_1.44.0              
+ [5] SummarizedExperiment_1.34.0 Biobase_2.64.0             
+ [7] MatrixGenerics_1.16.0       matrixStats_1.3.0          
+ [9] GenomicRanges_1.56.2        GenomeInfoDb_1.40.0        
+[11] IRanges_2.38.0              S4Vectors_0.42.0           
+[13] BiocGenerics_0.50.0         dplyr_1.1.4                
+[15] rprojroot_2.0.4            
 
 loaded via a namespace (and not attached):
  [1] gtable_0.3.5            xfun_0.43               bslib_0.7.0            
  [4] lattice_0.22-6          numDeriv_2016.8-1.1     vctrs_0.6.5            
  [7] tools_4.4.0             generics_0.1.3          parallel_4.4.0         
 [10] tibble_3.2.1            fansi_1.0.6             highr_0.10             
-[13] pkgconfig_2.0.3         Matrix_1.7-0            lifecycle_1.0.4        
-[16] GenomeInfoDbData_1.2.12 farver_2.1.2            compiler_4.4.0         
-[19] stringr_1.5.1           git2r_0.33.0            munsell_0.5.1          
-[22] codetools_0.2-20        httpuv_1.6.15           htmltools_0.5.8.1      
-[25] sass_0.4.9              yaml_2.3.8              later_1.3.2            
-[28] pillar_1.9.0            crayon_1.5.2            jquerylib_0.1.4        
-[31] whisker_0.4.1           MASS_7.3-60.2           BiocParallel_1.38.0    
-[34] cachem_1.0.8            DelayedArray_0.30.1     emdbook_1.3.14         
-[37] abind_1.4-5             bdsmatrix_1.3-7         locfit_1.5-9.12        
-[40] tidyselect_1.2.1        digest_0.6.35           mvtnorm_1.3-3          
-[43] stringi_1.8.4           labeling_0.4.3          fastmap_1.1.1          
-[46] grid_4.4.0              colorspace_2.1-0        cli_3.6.2              
-[49] SparseArray_1.4.8       magrittr_2.0.3          S4Arrays_1.4.1         
-[52] utf8_1.2.4              withr_3.0.0             UCSC.utils_1.0.0       
-[55] scales_1.3.0            promises_1.3.0          rmarkdown_2.26         
-[58] XVector_0.44.0          httr_1.4.7              workflowr_1.7.1        
-[61] coda_0.19-4.1           evaluate_0.23           knitr_1.46             
-[64] bbmle_1.0.25.1          rlang_1.1.3             Rcpp_1.0.12            
-[67] glue_1.7.0              rstudioapi_0.16.0       jsonlite_1.8.8         
-[70] plyr_1.8.9              R6_2.5.1                fs_1.6.4               
-[73] zlibbioc_1.50.0        </code></pre>
+[13] pkgconfig_2.0.3         Matrix_1.7-0            RColorBrewer_1.1-3     
+[16] lifecycle_1.0.4         GenomeInfoDbData_1.2.12 farver_2.1.2           
+[19] compiler_4.4.0          stringr_1.5.1           git2r_0.33.0           
+[22] munsell_0.5.1           codetools_0.2-20        httpuv_1.6.15          
+[25] htmltools_0.5.8.1       sass_0.4.9              yaml_2.3.8             
+[28] later_1.3.2             pillar_1.9.0            crayon_1.5.2           
+[31] jquerylib_0.1.4         whisker_0.4.1           MASS_7.3-60.2          
+[34] BiocParallel_1.38.0     cachem_1.0.8            DelayedArray_0.30.1    
+[37] emdbook_1.3.14          abind_1.4-5             bdsmatrix_1.3-7        
+[40] locfit_1.5-9.12         tidyselect_1.2.1        digest_0.6.35          
+[43] mvtnorm_1.3-3           stringi_1.8.4           labeling_0.4.3         
+[46] fastmap_1.1.1           grid_4.4.0              colorspace_2.1-0       
+[49] cli_3.6.2               SparseArray_1.4.8       magrittr_2.0.3         
+[52] S4Arrays_1.4.1          utf8_1.2.4              withr_3.0.0            
+[55] UCSC.utils_1.0.0        scales_1.3.0            promises_1.3.0         
+[58] rmarkdown_2.26          XVector_0.44.0          httr_1.4.7             
+[61] workflowr_1.7.1         coda_0.19-4.1           evaluate_0.23          
+[64] knitr_1.46              bbmle_1.0.25.1          rlang_1.1.3            
+[67] Rcpp_1.0.12             glue_1.7.0              rstudioapi_0.16.0      
+[70] jsonlite_1.8.8          plyr_1.8.9              R6_2.5.1               
+[73] fs_1.6.4                zlibbioc_1.50.0        </code></pre>
 </div>
 
 
