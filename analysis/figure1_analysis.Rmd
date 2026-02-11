@@ -371,13 +371,14 @@ ggplot(plot_ready, aes(x = bin, y = percentage)) +
   # Styling
   scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
                      limits = c(0, 0.40), expand = c(0,0)) +
-  labs(x = "Distance to TSS (kb)", y = "Region-gene associations") +
+  labs(x = "Distance to TSS (kb)", y = "Region-gene associations", title="Genomic location") +
   theme_bw() +
   theme(
     panel.grid = element_blank(),
     axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
     axis.title = element_text(size = 12),
-    plot.margin = margin(1, 1, 1, 1, "cm")
+    plot.margin = margin(1, 1, 1, 1, "cm"), 
+    plot.title = element_text(hjust = 0.5)   # center the title 
   )
 ```
 
@@ -410,12 +411,13 @@ ggplot(plot_ready, aes(x = bin, y = percentage)) +
   # Styling
   scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
                      limits = c(0, 0.40), expand = c(0,0)) +
-  labs(x = "Distance to TSS (kb)", y = "Region-gene associations") +
+  labs(x = "Distance to TSS (kb)", y = "Region-gene associations", title="Genomic location") +
   theme_bw() +
   theme(
     panel.grid = element_blank(),
     axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
     axis.title = element_text(size = 12),
-    plot.margin = margin(1, 1, 1, 1, "cm")
+    plot.margin = margin(1, 1, 1, 1, "cm"), 
+    plot.title = element_text(hjust = 0.5)   # center the title 
   )
 ```
