@@ -400,7 +400,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-02-09
+<strong>Last updated:</strong> 2026-02-11
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5e48e7e7886700315eec5203bc459f774e73f1batargetblank5e48e7ea">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreeebee85ebcdc51b44f5c081e271c7fbcff7d5ff1ctargetblankebee85ea">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/5e48e7e7886700315eec5203bc459f774e73f1ba" target="_blank">5e48e7e</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/ebee85ebcdc51b44f5c081e271c7fbcff7d5ff1c" target="_blank">ebee85e</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5e48e7e7886700315eec5203bc459f774e73f1batargetblank5e48e7ea"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreeebee85ebcdc51b44f5c081e271c7fbcff7d5ff1ctargetblankebee85ea"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/5e48e7e7886700315eec5203bc459f774e73f1ba" target="_blank">5e48e7e</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/ebee85ebcdc51b44f5c081e271c7fbcff7d5ff1c" target="_blank">ebee85e</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -613,6 +613,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/ebee85ebcdc51b44f5c081e271c7fbcff7d5ff1c/analysis/figure1_analysis.Rmd" target="_blank">ebee85e</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-09
+</td>
+<td>
+2/9/2026
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/ebee85ebcdc51b44f5c081e271c7fbcff7d5ff1c/docs/figure1_analysis.html" target="_blank">ebee85e</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-09
+</td>
+<td>
+2/9/2026
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -833,7 +867,7 @@ plot_df &lt;- as.data.frame(res) %&gt;%
     mean_expr = baseMean,
     neglogp   = -log10(pvalue),
     Typechange = case_when(
-      pvalue &lt; pval_cut &amp; log2FoldChange &gt;=  log2FC_cut  ~ &quot;Enhanced&quot;,
+      pvalue &lt; pval_cut &amp; log2FoldChange &gt;=  log2FC_cut  ~ &quot;Strengthed&quot;,
       pvalue &lt; pval_cut &amp; log2FoldChange &lt;= -log2FC_cut  ~ &quot;Weakened&quot;,
       TRUE                                               ~ &quot;Unchanged&quot;
     )
@@ -855,7 +889,7 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
   ) +
   scale_color_manual(
     values = c(
-      &quot;Enhanced&quot;   = &quot;#F8766D&quot;,
+      &quot;Strengthed&quot;   = &quot;#F8766D&quot;,
       &quot;Weakened&quot;     = &quot;#00BA38&quot;,
       &quot;Unchanged&quot; = &quot;#619CFF&quot;
     )
@@ -998,6 +1032,194 @@ pheatmap(
   fontsize_col = 12
 )</code></pre>
 <p><img src="figure/figure1_analysis.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/ebee85ebcdc51b44f5c081e271c7fbcff7d5ff1c/docs/figure/figure1_analysis.Rmd/unnamed-chunk-8-1.png" target="_blank">ebee85e</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>#if (!require(&quot;BiocManager&quot;, quietly = TRUE))
+#    install.packages(&quot;BiocManager&quot;)
+#
+#BiocManager::install(&quot;ChIPseeker&quot;)
+
+
+
+#if (!require(&quot;BiocManager&quot;, quietly = TRUE))
+#    install.packages(&quot;BiocManager&quot;)
+
+#BiocManager::install(&quot;TxDb.Mmusculus.UCSC.mm10.knownGene&quot;)
+
+#BiocManager::install(&quot;org.Mm.eg.db&quot;)
+
+# 1. Load necessary libraries
+library(ChIPseeker)
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+library(org.Mm.eg.db)
+library(GenomicRanges)
+library(ggplot2)
+library(tidyr)
+
+# 2. Prepare the data
+# Extract coordinates from the rownames (e.g., &quot;chr1:3128676:3128999&quot;)
+
+prepare_data_for_peak_distribution=function(plot_df)
+{
+
+regions_split &lt;- do.call(rbind, strsplit(rownames(plot_df), &quot;:&quot;))
+peaks_gr &lt;- GRanges(
+  seqnames = regions_split[,1],
+  ranges = IRanges(start = as.numeric(regions_split[,2]), 
+                   end = as.numeric(regions_split[,3]))
+)
+
+# 3. Annotate peaks relative to TSS
+txdb &lt;- TxDb.Mmusculus.UCSC.mm10.knownGene
+peakAnno &lt;- annotatePeak(peaks_gr, tssRegion=c(-3000, 3000), 
+                         TxDb=txdb, annoDb=&quot;org.Mm.eg.db&quot;)
+
+# 4. Extract distance data and create custom bins
+# Convert distance from bp to kb
+dist_data &lt;- as.data.frame(peakAnno) %&gt;%
+  mutate(dist_kb = distanceToTSS / 1000)
+
+# Define the breaks and labels exactly as seen in the image
+ordered_levels &lt;- c(&quot;&lt;-500&quot;, &quot;-500 to -50&quot;, &quot;-50 to -5&quot;, &quot;-5 to 0&quot;, 
+                    &quot;0 to 5&quot;, &quot;5 to 50&quot;, &quot;50 to 500&quot;, &quot;&gt;500&quot;)
+
+plot_ready &lt;- dist_data %&gt;%
+  mutate(bin = cut(dist_kb, 
+                   breaks = c(-Inf, -500, -50, -5, 0, 5, 50, 500, Inf), 
+                   labels = ordered_levels, 
+                   include.lowest = TRUE)) %&gt;%
+  # Ensure the factor levels follow our custom order
+  mutate(bin = factor(bin, levels = ordered_levels)) %&gt;%
+  group_by(bin) %&gt;%
+  summarise(count = n()) %&gt;%
+  complete(bin = factor(ordered_levels, levels = ordered_levels), 
+           fill = list(count = 0)) %&gt;%
+  mutate(percentage = count / sum(count))
+
+return(plot_ready)
+}
+
+plot_ready=prepare_data_for_peak_distribution(plot_df %&gt;% filter(Typechange==&quot;Strengthed&quot;))</code></pre>
+<pre><code>&gt;&gt; preparing features information...         2026-02-11 11:24:34 AM 
+&gt;&gt; identifying nearest features...       2026-02-11 11:24:35 AM 
+&gt;&gt; calculating distance from peak to TSS...  2026-02-11 11:24:35 AM 
+&gt;&gt; assigning genomic annotation...       2026-02-11 11:24:35 AM 
+&gt;&gt; adding gene annotation...             2026-02-11 11:24:49 AM 
+&gt;&gt; assigning chromosome lengths          2026-02-11 11:24:49 AM 
+&gt;&gt; done...                   2026-02-11 11:24:49 AM </code></pre>
+<pre class="r"><code>ggplot(plot_ready, aes(x = bin, y = percentage)) +
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;blue&quot;, color = &quot;black&quot;, width = 0.7) +
+  
+  # Add &quot;Strengthened&quot; to the top left corner
+  # x = 0.5 pushes it to the far left margin; hjust = 0 aligns it to the left
+  annotate(&quot;text&quot;, x = 0.5, y = 0.38, label = &quot;Strengthened&quot;, 
+           fontface = &quot;bold&quot;, size = 5, hjust = 0) +
+  
+  # Numbers moved further above the bars
+  geom_text(aes(label = count), vjust = -1.5, size = 3.5) +
+  
+  # Shortened TSS vertical line (ending at y=0.29)
+  # x = 4.5 sits between &quot;-5 to 0&quot; and &quot;0 to 5&quot;
+  annotate(&quot;segment&quot;, x = 4.5, xend = 4.5, y = 0.01, yend = 0.29, 
+           linewidth = 0.5, color = &quot;black&quot;) +
+  
+  # TSS Horizontal Arrow
+  annotate(&quot;segment&quot;, x = 4.5, xend = 5.2, y = 0.29, yend = 0.29, 
+           arrow = arrow(length = unit(0.1, &quot;cm&quot;)), linewidth = 0.5) +
+  
+  # TSS Text Label
+  annotate(&quot;text&quot;, x = 4.85, y = 0.31, label = &quot;TSS&quot;, size = 4) +
+  
+  # Styling
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
+                     limits = c(0, 0.40), expand = c(0,0)) +
+  labs(x = &quot;Distance to TSS (kb)&quot;, y = &quot;Region-gene associations&quot;) +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.title = element_text(size = 12),
+    plot.margin = margin(1, 1, 1, 1, &quot;cm&quot;)
+  )</code></pre>
+<p><img src="figure/figure1_analysis.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot_ready=prepare_data_for_peak_distribution(plot_df %&gt;% filter(Typechange==&quot;Weakened&quot;))</code></pre>
+<pre><code>&gt;&gt; preparing features information...         2026-02-11 11:24:49 AM 
+&gt;&gt; identifying nearest features...       2026-02-11 11:24:49 AM 
+&gt;&gt; calculating distance from peak to TSS...  2026-02-11 11:24:50 AM 
+&gt;&gt; assigning genomic annotation...       2026-02-11 11:24:50 AM 
+&gt;&gt; adding gene annotation...             2026-02-11 11:24:53 AM 
+&gt;&gt; assigning chromosome lengths          2026-02-11 11:24:53 AM 
+&gt;&gt; done...                   2026-02-11 11:24:53 AM </code></pre>
+<pre class="r"><code>ggplot(plot_ready, aes(x = bin, y = percentage)) +
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;blue&quot;, color = &quot;black&quot;, width = 0.7) +
+  
+  # Add &quot;Strengthened&quot; to the top left corner
+  # x = 0.5 pushes it to the far left margin; hjust = 0 aligns it to the left
+  annotate(&quot;text&quot;, x = 0.5, y = 0.38, label = &quot;Weakened&quot;, 
+           fontface = &quot;bold&quot;, size = 5, hjust = 0) +
+  
+  # Numbers moved further above the bars
+  geom_text(aes(label = count), vjust = -1.5, size = 3.5) +
+  
+  # Shortened TSS vertical line (ending at y=0.29)
+  # x = 4.5 sits between &quot;-5 to 0&quot; and &quot;0 to 5&quot;
+  annotate(&quot;segment&quot;, x = 4.5, xend = 4.5, y = 0.01, yend = 0.29, 
+           linewidth = 0.5, color = &quot;black&quot;) +
+  
+  # TSS Horizontal Arrow
+  annotate(&quot;segment&quot;, x = 4.5, xend = 5.2, y = 0.29, yend = 0.29, 
+           arrow = arrow(length = unit(0.1, &quot;cm&quot;)), linewidth = 0.5) +
+  
+  # TSS Text Label
+  annotate(&quot;text&quot;, x = 4.85, y = 0.31, label = &quot;TSS&quot;, size = 4) +
+  
+  # Styling
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
+                     limits = c(0, 0.40), expand = c(0,0)) +
+  labs(x = &quot;Distance to TSS (kb)&quot;, y = &quot;Region-gene associations&quot;) +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.title = element_text(size = 12),
+    plot.margin = margin(1, 1, 1, 1, &quot;cm&quot;)
+  )</code></pre>
+<p><img src="figure/figure1_analysis.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1029,41 +1251,171 @@ attached base packages:
 [8] base     
 
 other attached packages:
- [1] pheatmap_1.0.12             ggplot2_3.5.1              
- [3] apeglm_1.26.1               DESeq2_1.44.0              
- [5] SummarizedExperiment_1.34.0 Biobase_2.64.0             
- [7] MatrixGenerics_1.16.0       matrixStats_1.3.0          
- [9] GenomicRanges_1.56.2        GenomeInfoDb_1.40.0        
-[11] IRanges_2.38.0              S4Vectors_0.42.0           
-[13] BiocGenerics_0.50.0         dplyr_1.1.4                
-[15] rprojroot_2.0.4            
+ [1] tidyr_1.3.1                              
+ [2] org.Mm.eg.db_3.19.1                      
+ [3] TxDb.Mmusculus.UCSC.mm10.knownGene_3.10.0
+ [4] GenomicFeatures_1.56.0                   
+ [5] AnnotationDbi_1.66.0                     
+ [6] ChIPseeker_1.40.0                        
+ [7] pheatmap_1.0.12                          
+ [8] ggplot2_3.5.1                            
+ [9] apeglm_1.26.1                            
+[10] DESeq2_1.44.0                            
+[11] SummarizedExperiment_1.34.0              
+[12] Biobase_2.64.0                           
+[13] MatrixGenerics_1.16.0                    
+[14] matrixStats_1.3.0                        
+[15] GenomicRanges_1.56.2                     
+[16] GenomeInfoDb_1.40.0                      
+[17] IRanges_2.38.0                           
+[18] S4Vectors_0.42.0                         
+[19] BiocGenerics_0.50.0                      
+[20] dplyr_1.1.4                              
+[21] rprojroot_2.0.4                          
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.5            xfun_0.43               bslib_0.7.0            
- [4] lattice_0.22-6          numDeriv_2016.8-1.1     vctrs_0.6.5            
- [7] tools_4.4.0             generics_0.1.3          parallel_4.4.0         
-[10] tibble_3.2.1            fansi_1.0.6             highr_0.10             
-[13] pkgconfig_2.0.3         Matrix_1.7-0            RColorBrewer_1.1-3     
-[16] lifecycle_1.0.4         GenomeInfoDbData_1.2.12 farver_2.1.2           
-[19] compiler_4.4.0          stringr_1.5.1           git2r_0.33.0           
-[22] munsell_0.5.1           codetools_0.2-20        httpuv_1.6.15          
-[25] htmltools_0.5.8.1       sass_0.4.9              yaml_2.3.8             
-[28] later_1.3.2             pillar_1.9.0            crayon_1.5.2           
-[31] jquerylib_0.1.4         whisker_0.4.1           MASS_7.3-60.2          
-[34] BiocParallel_1.38.0     cachem_1.0.8            DelayedArray_0.30.1    
-[37] emdbook_1.3.14          abind_1.4-5             bdsmatrix_1.3-7        
-[40] locfit_1.5-9.12         tidyselect_1.2.1        digest_0.6.35          
-[43] mvtnorm_1.3-3           stringi_1.8.4           labeling_0.4.3         
-[46] fastmap_1.1.1           grid_4.4.0              colorspace_2.1-0       
-[49] cli_3.6.2               SparseArray_1.4.8       magrittr_2.0.3         
-[52] S4Arrays_1.4.1          utf8_1.2.4              withr_3.0.0            
-[55] UCSC.utils_1.0.0        scales_1.3.0            promises_1.3.0         
-[58] rmarkdown_2.26          XVector_0.44.0          httr_1.4.7             
-[61] workflowr_1.7.1         coda_0.19-4.1           evaluate_0.23          
-[64] knitr_1.46              bbmle_1.0.25.1          rlang_1.1.3            
-[67] Rcpp_1.0.12             glue_1.7.0              rstudioapi_0.16.0      
-[70] jsonlite_1.8.8          plyr_1.8.9              R6_2.5.1               
-[73] fs_1.6.4                zlibbioc_1.50.0        </code></pre>
+  [1] splines_4.4.0                          
+  [2] later_1.3.2                            
+  [3] BiocIO_1.14.0                          
+  [4] bitops_1.0-7                           
+  [5] ggplotify_0.1.2                        
+  [6] tibble_3.2.1                           
+  [7] R.oo_1.27.0                            
+  [8] polyclip_1.10-7                        
+  [9] XML_3.99-0.20                          
+ [10] lifecycle_1.0.4                        
+ [11] httr2_1.0.1                            
+ [12] lattice_0.22-6                         
+ [13] MASS_7.3-60.2                          
+ [14] magrittr_2.0.3                         
+ [15] sass_0.4.9                             
+ [16] rmarkdown_2.26                         
+ [17] plotrix_3.8-4                          
+ [18] jquerylib_0.1.4                        
+ [19] yaml_2.3.8                             
+ [20] httpuv_1.6.15                          
+ [21] cowplot_1.1.3                          
+ [22] DBI_1.2.3                              
+ [23] RColorBrewer_1.1-3                     
+ [24] abind_1.4-5                            
+ [25] zlibbioc_1.50.0                        
+ [26] purrr_1.0.2                            
+ [27] R.utils_2.12.3                         
+ [28] ggraph_2.2.1                           
+ [29] RCurl_1.98-1.16                        
+ [30] yulab.utils_0.2.0                      
+ [31] tweenr_2.0.3                           
+ [32] rappdirs_0.3.3                         
+ [33] git2r_0.33.0                           
+ [34] GenomeInfoDbData_1.2.12                
+ [35] enrichplot_1.24.4                      
+ [36] ggrepel_0.9.5                          
+ [37] tidytree_0.4.6                         
+ [38] codetools_0.2-20                       
+ [39] DelayedArray_0.30.1                    
+ [40] DOSE_3.30.5                            
+ [41] ggforce_0.4.2                          
+ [42] tidyselect_1.2.1                       
+ [43] aplot_0.2.5                            
+ [44] UCSC.utils_1.0.0                       
+ [45] farver_2.1.2                           
+ [46] viridis_0.6.5                          
+ [47] GenomicAlignments_1.40.0               
+ [48] jsonlite_1.8.8                         
+ [49] tidygraph_1.3.1                        
+ [50] bbmle_1.0.25.1                         
+ [51] tools_4.4.0                            
+ [52] treeio_1.28.0                          
+ [53] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+ [54] Rcpp_1.0.12                            
+ [55] glue_1.7.0                             
+ [56] gridExtra_2.3                          
+ [57] SparseArray_1.4.8                      
+ [58] xfun_0.43                              
+ [59] qvalue_2.36.0                          
+ [60] withr_3.0.0                            
+ [61] numDeriv_2016.8-1.1                    
+ [62] fastmap_1.1.1                          
+ [63] boot_1.3-30                            
+ [64] fansi_1.0.6                            
+ [65] caTools_1.18.2                         
+ [66] digest_0.6.35                          
+ [67] R6_2.5.1                               
+ [68] gridGraphics_0.5-1                     
+ [69] colorspace_2.1-0                       
+ [70] GO.db_3.19.1                           
+ [71] gtools_3.9.5                           
+ [72] RSQLite_2.3.6                          
+ [73] R.methodsS3_1.8.2                      
+ [74] utf8_1.2.4                             
+ [75] generics_0.1.3                         
+ [76] data.table_1.15.4                      
+ [77] rtracklayer_1.64.0                     
+ [78] graphlayouts_1.2.2                     
+ [79] httr_1.4.7                             
+ [80] S4Arrays_1.4.1                         
+ [81] scatterpie_0.2.4                       
+ [82] whisker_0.4.1                          
+ [83] pkgconfig_2.0.3                        
+ [84] gtable_0.3.5                           
+ [85] blob_1.2.4                             
+ [86] workflowr_1.7.1                        
+ [87] XVector_0.44.0                         
+ [88] shadowtext_0.1.4                       
+ [89] htmltools_0.5.8.1                      
+ [90] fgsea_1.30.0                           
+ [91] scales_1.3.0                           
+ [92] png_0.1-8                              
+ [93] ggfun_0.1.8                            
+ [94] knitr_1.46                             
+ [95] rstudioapi_0.16.0                      
+ [96] reshape2_1.4.4                         
+ [97] rjson_0.2.23                           
+ [98] coda_0.19-4.1                          
+ [99] nlme_3.1-164                           
+[100] curl_5.2.1                             
+[101] bdsmatrix_1.3-7                        
+[102] cachem_1.0.8                           
+[103] stringr_1.5.1                          
+[104] KernSmooth_2.23-22                     
+[105] parallel_4.4.0                         
+[106] restfulr_0.0.16                        
+[107] pillar_1.9.0                           
+[108] grid_4.4.0                             
+[109] vctrs_0.6.5                            
+[110] gplots_3.1.3.1                         
+[111] promises_1.3.0                         
+[112] evaluate_0.23                          
+[113] mvtnorm_1.3-3                          
+[114] cli_3.6.2                              
+[115] locfit_1.5-9.12                        
+[116] compiler_4.4.0                         
+[117] Rsamtools_2.20.0                       
+[118] rlang_1.1.3                            
+[119] crayon_1.5.2                           
+[120] labeling_0.4.3                         
+[121] emdbook_1.3.14                         
+[122] plyr_1.8.9                             
+[123] fs_1.6.4                               
+[124] stringi_1.8.4                          
+[125] viridisLite_0.4.2                      
+[126] BiocParallel_1.38.0                    
+[127] munsell_0.5.1                          
+[128] Biostrings_2.72.0                      
+[129] lazyeval_0.2.2                         
+[130] GOSemSim_2.30.2                        
+[131] Matrix_1.7-0                           
+[132] patchwork_1.3.0                        
+[133] bit64_4.0.5                            
+[134] KEGGREST_1.44.0                        
+[135] highr_0.10                             
+[136] igraph_2.0.3                           
+[137] memoise_2.0.1                          
+[138] bslib_0.7.0                            
+[139] ggtree_3.12.0                          
+[140] fastmatch_1.1-6                        
+[141] bit_4.0.5                              
+[142] ape_5.8-1                              </code></pre>
 </div>
 
 

@@ -129,7 +129,7 @@ plot_df <- as.data.frame(res) %>%
     mean_expr = baseMean,
     neglogp   = -log10(pvalue),
     Typechange = case_when(
-      pvalue < pval_cut & log2FoldChange >=  log2FC_cut  ~ "Enhanced",
+      pvalue < pval_cut & log2FoldChange >=  log2FC_cut  ~ "Strengthed",
       pvalue < pval_cut & log2FoldChange <= -log2FC_cut  ~ "Weakened",
       TRUE                                               ~ "Unchanged"
     )
@@ -158,7 +158,7 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
   ) +
   scale_color_manual(
     values = c(
-      "Enhanced"   = "#F8766D",
+      "Strengthed"   = "#F8766D",
       "Weakened"     = "#00BA38",
       "Unchanged" = "#619CFF"
     )
@@ -269,4 +269,154 @@ pheatmap(
   fontsize_col = 12
 )
 
+```
+
+
+
+
+```{r, message=F, warning=F}
+
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+#
+#BiocManager::install("ChIPseeker")
+
+
+
+#if (!require("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")
+
+#BiocManager::install("org.Mm.eg.db")
+
+# 1. Load necessary libraries
+library(ChIPseeker)
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
+library(org.Mm.eg.db)
+library(GenomicRanges)
+library(ggplot2)
+library(tidyr)
+
+# 2. Prepare the data
+# Extract coordinates from the rownames (e.g., "chr1:3128676:3128999")
+
+prepare_data_for_peak_distribution=function(plot_df)
+{
+
+regions_split <- do.call(rbind, strsplit(rownames(plot_df), ":"))
+peaks_gr <- GRanges(
+  seqnames = regions_split[,1],
+  ranges = IRanges(start = as.numeric(regions_split[,2]), 
+                   end = as.numeric(regions_split[,3]))
+)
+
+# 3. Annotate peaks relative to TSS
+txdb <- TxDb.Mmusculus.UCSC.mm10.knownGene
+peakAnno <- annotatePeak(peaks_gr, tssRegion=c(-3000, 3000), 
+                         TxDb=txdb, annoDb="org.Mm.eg.db")
+
+# 4. Extract distance data and create custom bins
+# Convert distance from bp to kb
+dist_data <- as.data.frame(peakAnno) %>%
+  mutate(dist_kb = distanceToTSS / 1000)
+
+# Define the breaks and labels exactly as seen in the image
+ordered_levels <- c("<-500", "-500 to -50", "-50 to -5", "-5 to 0", 
+                    "0 to 5", "5 to 50", "50 to 500", ">500")
+
+plot_ready <- dist_data %>%
+  mutate(bin = cut(dist_kb, 
+                   breaks = c(-Inf, -500, -50, -5, 0, 5, 50, 500, Inf), 
+                   labels = ordered_levels, 
+                   include.lowest = TRUE)) %>%
+  # Ensure the factor levels follow our custom order
+  mutate(bin = factor(bin, levels = ordered_levels)) %>%
+  group_by(bin) %>%
+  summarise(count = n()) %>%
+  complete(bin = factor(ordered_levels, levels = ordered_levels), 
+           fill = list(count = 0)) %>%
+  mutate(percentage = count / sum(count))
+
+return(plot_ready)
+}
+
+plot_ready=prepare_data_for_peak_distribution(plot_df %>% filter(Typechange=="Strengthed"))
+```
+
+
+```{r, message=F, warning=F}
+ggplot(plot_ready, aes(x = bin, y = percentage)) +
+  geom_bar(stat = "identity", fill = "blue", color = "black", width = 0.7) +
+  
+  # Add "Strengthened" to the top left corner
+  # x = 0.5 pushes it to the far left margin; hjust = 0 aligns it to the left
+  annotate("text", x = 0.5, y = 0.38, label = "Strengthened", 
+           fontface = "bold", size = 5, hjust = 0) +
+  
+  # Numbers moved further above the bars
+  geom_text(aes(label = count), vjust = -1.5, size = 3.5) +
+  
+  # Shortened TSS vertical line (ending at y=0.29)
+  # x = 4.5 sits between "-5 to 0" and "0 to 5"
+  annotate("segment", x = 4.5, xend = 4.5, y = 0.01, yend = 0.29, 
+           linewidth = 0.5, color = "black") +
+  
+  # TSS Horizontal Arrow
+  annotate("segment", x = 4.5, xend = 5.2, y = 0.29, yend = 0.29, 
+           arrow = arrow(length = unit(0.1, "cm")), linewidth = 0.5) +
+  
+  # TSS Text Label
+  annotate("text", x = 4.85, y = 0.31, label = "TSS", size = 4) +
+  
+  # Styling
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
+                     limits = c(0, 0.40), expand = c(0,0)) +
+  labs(x = "Distance to TSS (kb)", y = "Region-gene associations") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.title = element_text(size = 12),
+    plot.margin = margin(1, 1, 1, 1, "cm")
+  )
+```
+
+
+```{r, message=F, warning=F}
+plot_ready=prepare_data_for_peak_distribution(plot_df %>% filter(Typechange=="Weakened"))
+ggplot(plot_ready, aes(x = bin, y = percentage)) +
+  geom_bar(stat = "identity", fill = "blue", color = "black", width = 0.7) +
+  
+  # Add "Strengthened" to the top left corner
+  # x = 0.5 pushes it to the far left margin; hjust = 0 aligns it to the left
+  annotate("text", x = 0.5, y = 0.38, label = "Weakened", 
+           fontface = "bold", size = 5, hjust = 0) +
+  
+  # Numbers moved further above the bars
+  geom_text(aes(label = count), vjust = -1.5, size = 3.5) +
+  
+  # Shortened TSS vertical line (ending at y=0.29)
+  # x = 4.5 sits between "-5 to 0" and "0 to 5"
+  annotate("segment", x = 4.5, xend = 4.5, y = 0.01, yend = 0.29, 
+           linewidth = 0.5, color = "black") +
+  
+  # TSS Horizontal Arrow
+  annotate("segment", x = 4.5, xend = 5.2, y = 0.29, yend = 0.29, 
+           arrow = arrow(length = unit(0.1, "cm")), linewidth = 0.5) +
+  
+  # TSS Text Label
+  annotate("text", x = 4.85, y = 0.31, label = "TSS", size = 4) +
+  
+  # Styling
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
+                     limits = c(0, 0.40), expand = c(0,0)) +
+  labs(x = "Distance to TSS (kb)", y = "Region-gene associations") +
+  theme_bw() +
+  theme(
+    panel.grid = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.title = element_text(size = 12),
+    plot.margin = margin(1, 1, 1, 1, "cm")
+  )
 ```
