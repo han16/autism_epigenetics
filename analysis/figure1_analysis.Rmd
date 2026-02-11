@@ -118,7 +118,7 @@ library(dplyr)
 library(ggplot2)
 
 
-log2FC_cut <- 0.38
+log2FC_cut <- 0.5
 pval_cut   <- 0.05
 
 
@@ -142,7 +142,6 @@ plot_df$neglogp <- pmin(plot_df$neglogp, 15)
 
 
 ```{r, message=F, warning=F}
-library(ggplot2)
 
 ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
   geom_point(
@@ -167,7 +166,7 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
     range = c(1, 6),
     name = "-log10(pvalue)"
   ) +
-  labs(
+  labs(title = "Differential ATAC-seq Peaks: log2FC_cut: 0.5, pval_cut: 0.05",
     x = "Log Mean expression",
     y = "Log2 Fold Change",
     color = "Typechange"
@@ -177,7 +176,6 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
     panel.grid.major = element_line(color = "grey90"),
     panel.grid.minor = element_blank()
   )
-
 ```
 
 
@@ -200,7 +198,7 @@ dds <- DESeqDataSetFromMatrix(
 )
 
 # filter low-count peaks (important)
-dds <- dds[rowSums(counts(dds)) >= 10, ]
+#dds <- dds[rowSums(counts(dds)) >= 10, ]
 
 # variance-stabilizing transform
 vsd <- vst(dds, blind = TRUE)
@@ -234,21 +232,21 @@ res_filt <- res_filt[
 ]
 
 # Limit size (prevents clustering crash)
-topN <- min(5000, nrow(res_filt))
-res_filt <- res_filt[1:topN, , drop = FALSE]
+#topN <- min(5000, nrow(res_filt))
+#res_filt <- res_filt[1:topN, , drop = FALSE]
 
 # ----------------------------
 # Subset matrix (CRITICAL drop=FALSE)
 # ----------------------------
 mat_filt <- mat_scaled[rownames(res_filt), , drop = FALSE]
 
-gained <- res_filt$log2FoldChange > 0
-lost   <- res_filt$log2FoldChange < 0
+strengthened <- res_filt$log2FoldChange > 0
+weakened   <- res_filt$log2FoldChange < 0
 
-mat_gained <- mat_filt[gained, , drop = FALSE]
-mat_lost   <- mat_filt[lost,   , drop = FALSE]
+mat_strengthened <- mat_filt[strengthened, , drop = FALSE]
+mat_weakened   <- mat_filt[weakened,   , drop = FALSE]
 
-mat_ordered <- rbind(mat_gained, mat_lost)
+mat_ordered <- rbind(mat_strengthened, mat_weakened)
 
 ```
 
@@ -265,8 +263,9 @@ pheatmap(
   show_rownames = FALSE,
   show_colnames = TRUE,
   border_color = NA,
-  gaps_row = nrow(mat_gained),
-  fontsize_col = 12
+  gaps_row = nrow(mat_strengthened),
+  fontsize_col = 12, 
+  main = "Heatmap: log2FC_cut: 0.5, pval_cut: 0.05"
 )
 
 ```
