@@ -400,7 +400,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-02-11
+<strong>Last updated:</strong> 2026-02-16
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree62ed111e7051c9c7a34fed0adca7c82273f91546targetblank62ed111a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree76c56f6fea240af335e6c9130f45a5590d1f55f3targetblank76c56f6a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/62ed111e7051c9c7a34fed0adca7c82273f91546" target="_blank">62ed111</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/76c56f6fea240af335e6c9130f45a5590d1f55f3" target="_blank">76c56f6</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree62ed111e7051c9c7a34fed0adca7c82273f91546targetblank62ed111a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree76c56f6fea240af335e6c9130f45a5590d1f55f3targetblank76c56f6a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/62ed111e7051c9c7a34fed0adca7c82273f91546" target="_blank">62ed111</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/76c56f6fea240af335e6c9130f45a5590d1f55f3" target="_blank">76c56f6</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -566,6 +566,9 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
+Untracked files:
+    Untracked:  Cre_strengthened.bed
+
 Unstaged changes:
     Modified:   analysis/figure1_analysis.Rmd
 
@@ -613,6 +616,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/76c56f6fea240af335e6c9130f45a5590d1f55f3/analysis/figure1_analysis.Rmd" target="_blank">76c56f6</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-11
+</td>
+<td>
+2/11/2026
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/76c56f6fea240af335e6c9130f45a5590d1f55f3/docs/figure1_analysis.html" target="_blank">76c56f6</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-11
+</td>
+<td>
+2/11/2026
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -924,7 +961,7 @@ chr1:3300549:3300826  0.637331</code></pre>
 library(ggplot2)
 
 
-log2FC_cut &lt;- 0.5
+log2FC_cut &lt;- 0.58
 pval_cut   &lt;- 0.05
 
 
@@ -935,7 +972,7 @@ plot_df &lt;- as.data.frame(res) %&gt;%
     mean_expr = baseMean,
     neglogp   = -log10(pvalue),
     Typechange = case_when(
-      pvalue &lt; pval_cut &amp; log2FoldChange &gt;=  log2FC_cut  ~ &quot;Strengthed&quot;,
+      pvalue &lt; pval_cut &amp; log2FoldChange &gt;=  log2FC_cut  ~ &quot;Strengthened&quot;,
       pvalue &lt; pval_cut &amp; log2FoldChange &lt;= -log2FC_cut  ~ &quot;Weakened&quot;,
       TRUE                                               ~ &quot;Unchanged&quot;
     )
@@ -955,7 +992,7 @@ plot_df$neglogp &lt;- pmin(plot_df$neglogp, 15)</code></pre>
   ) +
   scale_color_manual(
     values = c(
-      &quot;Strengthed&quot;   = &quot;#F8766D&quot;,
+      &quot;Strengthened&quot;   = &quot;#F8766D&quot;,
       &quot;Weakened&quot;     = &quot;#00BA38&quot;,
       &quot;Unchanged&quot; = &quot;#619CFF&quot;
     )
@@ -964,7 +1001,7 @@ plot_df$neglogp &lt;- pmin(plot_df$neglogp, 15)</code></pre>
     range = c(1, 6),
     name = &quot;-log10(pvalue)&quot;
   ) +
-  labs(title = &quot;Differential ATAC-seq Peaks: log2FC_cut: 0.5, pval_cut: 0.05&quot;,
+  labs(title = &quot;Differential ATAC-seq Peaks: log2FC_cut: 0.58, pval_cut: 0.05&quot;,
     x = &quot;Log Mean expression&quot;,
     y = &quot;Log2 Fold Change&quot;,
     color = &quot;Typechange&quot;
@@ -1045,6 +1082,12 @@ han
 </table>
 </div>
 </div>
+<pre class="r"><code>plot_df %&gt;% 
+  dplyr::count(Typechange)</code></pre>
+<pre><code>    Typechange      n
+1 Strengthened   8700
+2    Unchanged 218749
+3     Weakened  10485</code></pre>
 <pre class="r"><code>#################### normalize counts 
 library(DESeq2)
 
@@ -1118,7 +1161,7 @@ pheatmap(
   border_color = NA,
   gaps_row = nrow(mat_strengthened),
   fontsize_col = 12, 
-  main = &quot;Heatmap: log2FC_cut: 0.5, pval_cut: 0.05&quot;
+  main = &quot;Heatmap: log2FC_cut: 0.58, pval_cut: 0.05&quot;
 )</code></pre>
 <p><img src="figure/figure1_analysis.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -1234,14 +1277,16 @@ plot_ready &lt;- dist_data %&gt;%
 return(plot_ready)
 }
 
-plot_ready=prepare_data_for_peak_distribution(plot_df %&gt;% filter(Typechange==&quot;Strengthed&quot;))</code></pre>
-<pre><code>&gt;&gt; preparing features information...         2026-02-11 2:55:53 PM 
-&gt;&gt; identifying nearest features...       2026-02-11 2:55:54 PM 
-&gt;&gt; calculating distance from peak to TSS...  2026-02-11 2:55:55 PM 
-&gt;&gt; assigning genomic annotation...       2026-02-11 2:55:55 PM 
-&gt;&gt; adding gene annotation...             2026-02-11 2:56:07 PM 
-&gt;&gt; assigning chromosome lengths          2026-02-11 2:56:08 PM 
-&gt;&gt; done...                   2026-02-11 2:56:08 PM </code></pre>
+plot_ready=prepare_data_for_peak_distribution(plot_df %&gt;% filter(Typechange==&quot;Strengthened&quot;))</code></pre>
+<pre><code>&gt;&gt; preparing features information...         2026-02-16 3:56:35 PM 
+&gt;&gt; identifying nearest features...       2026-02-16 3:56:35 PM 
+&gt;&gt; calculating distance from peak to TSS...  2026-02-16 3:56:36 PM 
+&gt;&gt; assigning genomic annotation...       2026-02-16 3:56:36 PM 
+&gt;&gt; adding gene annotation...             2026-02-16 3:56:48 PM 
+&gt;&gt; assigning chromosome lengths          2026-02-16 3:56:48 PM 
+&gt;&gt; done...                   2026-02-16 3:56:48 PM </code></pre>
+<pre class="r"><code>sum(plot_ready$count)</code></pre>
+<pre><code>[1] 8699</code></pre>
 <pre class="r"><code>ggplot(plot_ready, aes(x = bin, y = percentage)) +
   geom_bar(stat = &quot;identity&quot;, fill = &quot;blue&quot;, color = &quot;black&quot;, width = 0.7) +
   
@@ -1302,6 +1347,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/han16/autism_epigenetics/blob/76c56f6fea240af335e6c9130f45a5590d1f55f3/docs/figure/figure1_analysis.Rmd/unnamed-chunk-10-1.png" target="_blank">76c56f6</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-11
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/han16/autism_epigenetics/blob/62ed111e7051c9c7a34fed0adca7c82273f91546/docs/figure/figure1_analysis.Rmd/unnamed-chunk-10-1.png" target="_blank">62ed111</a>
 </td>
 <td>
@@ -1327,13 +1383,15 @@ han
 </div>
 </div>
 <pre class="r"><code>plot_ready=prepare_data_for_peak_distribution(plot_df %&gt;% filter(Typechange==&quot;Weakened&quot;))</code></pre>
-<pre><code>&gt;&gt; preparing features information...         2026-02-11 2:56:08 PM 
-&gt;&gt; identifying nearest features...       2026-02-11 2:56:08 PM 
-&gt;&gt; calculating distance from peak to TSS...  2026-02-11 2:56:08 PM 
-&gt;&gt; assigning genomic annotation...       2026-02-11 2:56:08 PM 
-&gt;&gt; adding gene annotation...             2026-02-11 2:56:09 PM 
-&gt;&gt; assigning chromosome lengths          2026-02-11 2:56:09 PM 
-&gt;&gt; done...                   2026-02-11 2:56:09 PM </code></pre>
+<pre><code>&gt;&gt; preparing features information...         2026-02-16 3:56:49 PM 
+&gt;&gt; identifying nearest features...       2026-02-16 3:56:49 PM 
+&gt;&gt; calculating distance from peak to TSS...  2026-02-16 3:56:49 PM 
+&gt;&gt; assigning genomic annotation...       2026-02-16 3:56:49 PM 
+&gt;&gt; adding gene annotation...             2026-02-16 3:56:51 PM 
+&gt;&gt; assigning chromosome lengths          2026-02-16 3:56:52 PM 
+&gt;&gt; done...                   2026-02-16 3:56:52 PM </code></pre>
+<pre class="r"><code>sum(plot_ready$count)</code></pre>
+<pre><code>[1] 10483</code></pre>
 <pre class="r"><code>ggplot(plot_ready, aes(x = bin, y = percentage)) +
   geom_bar(stat = &quot;identity&quot;, fill = &quot;blue&quot;, color = &quot;black&quot;, width = 0.7) +
   
@@ -1394,6 +1452,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/han16/autism_epigenetics/blob/76c56f6fea240af335e6c9130f45a5590d1f55f3/docs/figure/figure1_analysis.Rmd/unnamed-chunk-11-1.png" target="_blank">76c56f6</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-11
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/han16/autism_epigenetics/blob/62ed111e7051c9c7a34fed0adca7c82273f91546/docs/figure/figure1_analysis.Rmd/unnamed-chunk-11-1.png" target="_blank">62ed111</a>
 </td>
 <td>
@@ -1418,6 +1487,23 @@ han
 </table>
 </div>
 </div>
+<pre class="r"><code># Function to convert your matrix rownames (chr:start:end) to BED format
+export_bed &lt;- function(mat, filename) {
+  # Split the &quot;chr:start:end&quot; strings
+  coords &lt;- do.call(rbind, strsplit(rownames(mat), &quot;:&quot;))
+  # Create a data frame
+  bed_data &lt;- data.frame(
+    chrom = coords[,1],
+    start = coords[,2],
+    end   = coords[,3]
+  )
+  # Write to file (Tab-separated, no headers)
+  write.table(bed_data, filename, sep=&quot;\t&quot;, quote=F, row.names=F, col.names=F)
+}
+
+# Export your two groups
+#export_bed(mat_strengthened, file.path(root, &quot;../Data/Novogene/PeakWindows/Cre_strengthened.bed&quot;))
+#export_bed(mat_weakened, file.path(root, &quot;../Data/Novogene/PeakWindows/Cre_weakened.bed&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

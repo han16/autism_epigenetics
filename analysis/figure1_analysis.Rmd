@@ -118,7 +118,7 @@ library(dplyr)
 library(ggplot2)
 
 
-log2FC_cut <- 0.5
+log2FC_cut <- 0.58
 pval_cut   <- 0.05
 
 
@@ -129,7 +129,7 @@ plot_df <- as.data.frame(res) %>%
     mean_expr = baseMean,
     neglogp   = -log10(pvalue),
     Typechange = case_when(
-      pvalue < pval_cut & log2FoldChange >=  log2FC_cut  ~ "Strengthed",
+      pvalue < pval_cut & log2FoldChange >=  log2FC_cut  ~ "Strengthened",
       pvalue < pval_cut & log2FoldChange <= -log2FC_cut  ~ "Weakened",
       TRUE                                               ~ "Unchanged"
     )
@@ -157,7 +157,7 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
   ) +
   scale_color_manual(
     values = c(
-      "Strengthed"   = "#F8766D",
+      "Strengthened"   = "#F8766D",
       "Weakened"     = "#00BA38",
       "Unchanged" = "#619CFF"
     )
@@ -166,7 +166,7 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
     range = c(1, 6),
     name = "-log10(pvalue)"
   ) +
-  labs(title = "Differential ATAC-seq Peaks: log2FC_cut: 0.5, pval_cut: 0.05",
+  labs(title = "Differential ATAC-seq Peaks: log2FC_cut: 0.58, pval_cut: 0.05",
     x = "Log Mean expression",
     y = "Log2 Fold Change",
     color = "Typechange"
@@ -176,6 +176,10 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
     panel.grid.major = element_line(color = "grey90"),
     panel.grid.minor = element_blank()
   )
+plot_df %>% 
+  dplyr::count(Typechange)
+
+
 ```
 
 
@@ -265,7 +269,7 @@ pheatmap(
   border_color = NA,
   gaps_row = nrow(mat_strengthened),
   fontsize_col = 12, 
-  main = "Heatmap: log2FC_cut: 0.5, pval_cut: 0.05"
+  main = "Heatmap: log2FC_cut: 0.58, pval_cut: 0.05"
 )
 
 ```
@@ -340,7 +344,8 @@ plot_ready <- dist_data %>%
 return(plot_ready)
 }
 
-plot_ready=prepare_data_for_peak_distribution(plot_df %>% filter(Typechange=="Strengthed"))
+plot_ready=prepare_data_for_peak_distribution(plot_df %>% filter(Typechange=="Strengthened"))
+sum(plot_ready$count)
 ```
 
 
@@ -385,6 +390,8 @@ ggplot(plot_ready, aes(x = bin, y = percentage)) +
 
 ```{r, message=F, warning=F}
 plot_ready=prepare_data_for_peak_distribution(plot_df %>% filter(Typechange=="Weakened"))
+sum(plot_ready$count)
+
 ggplot(plot_ready, aes(x = bin, y = percentage)) +
   geom_bar(stat = "identity", fill = "blue", color = "black", width = 0.7) +
   
@@ -420,4 +427,27 @@ ggplot(plot_ready, aes(x = bin, y = percentage)) +
     plot.margin = margin(1, 1, 1, 1, "cm"), 
     plot.title = element_text(hjust = 0.5)   # center the title 
   )
+```
+
+
+
+
+```{r, message=F, warning=F, eval=F}
+# Function to convert your matrix rownames (chr:start:end) to BED format
+export_bed <- function(mat, filename) {
+  # Split the "chr:start:end" strings
+  coords <- do.call(rbind, strsplit(rownames(mat), ":"))
+  # Create a data frame
+  bed_data <- data.frame(
+    chrom = coords[,1],
+    start = coords[,2],
+    end   = coords[,3]
+  )
+  # Write to file (Tab-separated, no headers)
+  write.table(bed_data, filename, sep="\t", quote=F, row.names=F, col.names=F)
+}
+
+# Export your two groups
+#export_bed(mat_strengthened, file.path(root, "../Data/Novogene/PeakWindows/Cre_strengthened.bed"))
+#export_bed(mat_weakened, file.path(root, "../Data/Novogene/PeakWindows/Cre_weakened.bed"))
 ```
