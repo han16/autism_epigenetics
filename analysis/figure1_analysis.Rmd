@@ -24,7 +24,7 @@ head(union_peak_reads_count)
 ```
 
 
-
+* in total 237,934 union peak windows 
 
 
 ```{r, message=F, warning=F}
@@ -73,11 +73,12 @@ coldata <- data.frame(
 # ----------------------------
 # Create DESeq2 object
 # ----------------------------
-dds <- DESeqDataSetFromMatrix(
+dds1 <- DESeqDataSetFromMatrix(
   countData = count_mat,
   colData   = coldata,
   design    = ~ condition
 )
+sizeFactors(dds1)
 
 # ----------------------------
 # Optional but recommended: filter low counts
@@ -88,12 +89,13 @@ dds <- DESeqDataSetFromMatrix(
 # ----------------------------
 # Run DESeq2
 # ----------------------------
-dds <- DESeq(dds)
+dds2 <- DESeq(dds1)
+sizeFactors(dds2)
 
 # ----------------------------
 # Results: K vs C
 # ----------------------------
-res <- results(dds, contrast = c("condition", "K", "C"))
+res <- results(dds2, contrast = c("condition", "K", "C"))
 
 head(res)
 
@@ -111,6 +113,47 @@ head(res)
 
 ```
 
+* K: Cre, Bmal1-deficient  and C: FIx, wild-type 
+
+* log2FoldChange:  Cre vs FIx 
+
+$$baseMean=\frac{1}{n}\sum_{i=1}^n\frac{C_{ij}}{s_i}=\frac{1}{n}\sum_{i=1}^nC^*_{ij}$$
+$C_{ij}$ is the raw count in peak $j$ and sample $i$.  $s_i$ is the size factor for sample i. $C^*_{ij}$ is the normalized count. 
+
+
+* $$log2FoldChange=log_2\frac{average~C^*_{ij}~in~group~k}{average~C^*_{ij}~in~group~c}$$
+
+
+
+
+
+```{r, message=F, warning=F, eval=F}
+################# calculate size factor ########################
+# 1. Calculate the Geometric Mean for each row (the pseudo-reference)
+# We use log to avoid overflow with large products
+geom_means <- exp(rowMeans(log(count_mat)))
+
+# 2. Filter out zeros
+# Geometric mean is 0 if any sample has 0. DESeq2 only uses rows where 
+# the geometric mean is > 0 to calculate size factors.
+count_mat_filtered <- count_mat[geom_means > 0, ]
+geom_means_filtered <- geom_means[geom_means > 0]
+
+# 3. Calculate the ratios for each peak
+# Divide each sample's counts by the geometric mean reference
+ratios <- count_mat_filtered / geom_means_filtered
+
+# 4. Find the Median of the ratios for each sample
+# This is your manual Size Factor
+manual_size_factors <- apply(ratios, 2, median)
+
+# Compare with DESeq2 results
+print("Manual Size Factors:")
+print(manual_size_factors)
+
+print("DESeq2 Size Factors:")
+print(sizeFactors(dds2))
+```
 
 
 ```{r, message=F, warning=F}
@@ -166,9 +209,10 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
     range = c(1, 6),
     name = "-log10(pvalue)"
   ) +
-  labs(title = "Differential ATAC-seq Peaks: log2FC_cut: 0.58, pval_cut: 0.05",
-    x = "Log Mean expression",
-    y = "Log2 Fold Change",
+  labs(title = "log2FC_cut: 0.58, pval_cut: 0.05",
+    x = "BaseMean",
+    #y = "Log2(Fold Change)",
+    y=expression(paste(log[2]("Fold Change"))),
     color = "Typechange"
   ) +
   theme_bw(base_size = 14) +
@@ -186,33 +230,14 @@ plot_df %>%
 
 ```{r, message=F, warning=F}
 #################### normalize counts 
-library(DESeq2)
-
-count_mat <- as.matrix(count_mat)
-
-coldata <- data.frame(
-  row.names = colnames(count_mat),
-  condition = c("C", "C", "K", "K")
-)
-
-dds <- DESeqDataSetFromMatrix(
-  countData = count_mat,
-  colData = coldata,
-  design = ~ condition
-)
-
-# filter low-count peaks (important)
-#dds <- dds[rowSums(counts(dds)) >= 10, ]
 
 # variance-stabilizing transform
-vsd <- vst(dds, blind = TRUE)
+vsd <- vst(dds1, blind = TRUE)
 
 mat <- assay(vsd)
 
 mat_scaled <- t(scale(t(mat)))
 
-dds <- DESeq(dds)
-res <- results(dds, contrast = c("condition", "K", "C"))
 
 # keep only peaks in matrix
 res <- res[rownames(mat_scaled), ]
@@ -251,11 +276,14 @@ mat_strengthened <- mat_filt[strengthened, , drop = FALSE]
 mat_weakened   <- mat_filt[weakened,   , drop = FALSE]
 
 mat_ordered <- rbind(mat_strengthened, mat_weakened)
+colnames(mat_ordered)
+colnames(mat_ordered) <- c("FIx1", "FIx2", "Cre1", "Cre2")
 
 ```
 
 
 ```{r, message=F, warning=F}
+
 
 library(pheatmap)
 
