@@ -379,7 +379,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -390,8 +390,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -400,13 +400,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-02-18
+<strong>Last updated:</strong> 2026-02-23
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>autism_epigenetics/</code> <span
@@ -429,21 +429,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -534,15 +531,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreec75eacc8e946da2c60846e643179947a28d529f9targetblankc75eacca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree99fd22c96b042227563a2ef82f3ae252dbff9adftargetblank99fd22ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/c75eacc8e946da2c60846e643179947a28d529f9" target="_blank">c75eacc</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/99fd22c96b042227563a2ef82f3ae252dbff9adf" target="_blank">99fd22c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreec75eacc8e946da2c60846e643179947a28d529f9targetblankc75eacca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree99fd22c96b042227563a2ef82f3ae252dbff9adftargetblank99fd22ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +549,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/c75eacc8e946da2c60846e643179947a28d529f9" target="_blank">c75eacc</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/99fd22c96b042227563a2ef82f3ae252dbff9adf" target="_blank">99fd22c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -567,7 +564,7 @@ were generated:
 </p>
 <pre><code>
 Unstaged changes:
-    Modified:   analysis/figure1_analysis.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -613,6 +610,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/99fd22c96b042227563a2ef82f3ae252dbff9adf/analysis/figure1_analysis.Rmd" target="_blank">99fd22c</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-18
+</td>
+<td>
+2/18/2026
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/99fd22c96b042227563a2ef82f3ae252dbff9adf/docs/figure1_analysis.html" target="_blank">99fd22c</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-18
+</td>
+<td>
+2/18/2026
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1115,6 +1146,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/han16/autism_epigenetics/blob/99fd22c96b042227563a2ef82f3ae252dbff9adf/docs/figure/figure1_analysis.Rmd/unnamed-chunk-6-1.png" target="_blank">99fd22c</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/han16/autism_epigenetics/blob/ebee85ebcdc51b44f5c081e271c7fbcff7d5ff1c/docs/figure/figure1_analysis.Rmd/unnamed-chunk-6-1.png" target="_blank">ebee85e</a>
 </td>
 <td>
@@ -1194,6 +1236,43 @@ pheatmap(
   main = &quot;Heatmap: log2FC_cut: 0.58, pval_cut: 0.05&quot;
 )</code></pre>
 <p><img src="figure/figure1_analysis.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/99fd22c96b042227563a2ef82f3ae252dbff9adf/docs/figure/figure1_analysis.Rmd/unnamed-chunk-9-1.png" target="_blank">99fd22c</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#if (!require(&quot;BiocManager&quot;, quietly = TRUE))
 #    install.packages(&quot;BiocManager&quot;)
 #
@@ -1260,13 +1339,13 @@ return(plot_ready)
 }
 
 plot_ready=prepare_data_for_peak_distribution(plot_df %&gt;% filter(Typechange==&quot;Strengthened&quot;))</code></pre>
-<pre><code>&gt;&gt; preparing features information...         2026-02-18 11:25:44 AM 
-&gt;&gt; identifying nearest features...       2026-02-18 11:25:44 AM 
-&gt;&gt; calculating distance from peak to TSS...  2026-02-18 11:25:45 AM 
-&gt;&gt; assigning genomic annotation...       2026-02-18 11:25:45 AM 
-&gt;&gt; adding gene annotation...             2026-02-18 11:25:52 AM 
-&gt;&gt; assigning chromosome lengths          2026-02-18 11:25:52 AM 
-&gt;&gt; done...                   2026-02-18 11:25:52 AM </code></pre>
+<pre><code>&gt;&gt; preparing features information...         2026-02-23 2:42:30 PM 
+&gt;&gt; identifying nearest features...       2026-02-23 2:42:30 PM 
+&gt;&gt; calculating distance from peak to TSS...  2026-02-23 2:42:31 PM 
+&gt;&gt; assigning genomic annotation...       2026-02-23 2:42:31 PM 
+&gt;&gt; adding gene annotation...             2026-02-23 2:42:39 PM 
+&gt;&gt; assigning chromosome lengths          2026-02-23 2:42:39 PM 
+&gt;&gt; done...                   2026-02-23 2:42:39 PM </code></pre>
 <pre class="r"><code>sum(plot_ready$count)</code></pre>
 <pre><code>[1] 8699</code></pre>
 <pre class="r"><code>ggplot(plot_ready, aes(x = bin, y = percentage)) +
@@ -1329,6 +1408,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/han16/autism_epigenetics/blob/99fd22c96b042227563a2ef82f3ae252dbff9adf/docs/figure/figure1_analysis.Rmd/unnamed-chunk-11-1.png" target="_blank">99fd22c</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/han16/autism_epigenetics/blob/c75eacc8e946da2c60846e643179947a28d529f9/docs/figure/figure1_analysis.Rmd/unnamed-chunk-11-1.png" target="_blank">c75eacc</a>
 </td>
 <td>
@@ -1376,13 +1466,13 @@ han
 </div>
 </div>
 <pre class="r"><code>plot_ready=prepare_data_for_peak_distribution(plot_df %&gt;% filter(Typechange==&quot;Weakened&quot;))</code></pre>
-<pre><code>&gt;&gt; preparing features information...         2026-02-18 11:25:52 AM 
-&gt;&gt; identifying nearest features...       2026-02-18 11:25:52 AM 
-&gt;&gt; calculating distance from peak to TSS...  2026-02-18 11:25:53 AM 
-&gt;&gt; assigning genomic annotation...       2026-02-18 11:25:53 AM 
-&gt;&gt; adding gene annotation...             2026-02-18 11:25:54 AM 
-&gt;&gt; assigning chromosome lengths          2026-02-18 11:25:54 AM 
-&gt;&gt; done...                   2026-02-18 11:25:54 AM </code></pre>
+<pre><code>&gt;&gt; preparing features information...         2026-02-23 2:42:39 PM 
+&gt;&gt; identifying nearest features...       2026-02-23 2:42:39 PM 
+&gt;&gt; calculating distance from peak to TSS...  2026-02-23 2:42:39 PM 
+&gt;&gt; assigning genomic annotation...       2026-02-23 2:42:39 PM 
+&gt;&gt; adding gene annotation...             2026-02-23 2:42:41 PM 
+&gt;&gt; assigning chromosome lengths          2026-02-23 2:42:41 PM 
+&gt;&gt; done...                   2026-02-23 2:42:41 PM </code></pre>
 <pre class="r"><code>sum(plot_ready$count)</code></pre>
 <pre><code>[1] 10483</code></pre>
 <pre class="r"><code>ggplot(plot_ready, aes(x = bin, y = percentage)) +
@@ -1421,6 +1511,43 @@ han
     plot.title = element_text(hjust = 0.5)   # center the title 
   )</code></pre>
 <p><img src="figure/figure1_analysis.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/99fd22c96b042227563a2ef82f3ae252dbff9adf/docs/figure/figure1_analysis.Rmd/unnamed-chunk-12-1.png" target="_blank">99fd22c</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-02-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># Function to convert your matrix rownames (chr:start:end) to BED format
 export_bed &lt;- function(mat, filename) {
   # Split the &quot;chr:start:end&quot; strings
