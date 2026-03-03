@@ -146,12 +146,18 @@ hist_data$variable <- factor(hist_data$variable,
 
 #  Draw the plot
 ggplot(hist_data, aes(x = sample, y = count, fill = variable)) +
-  geom_bar(stat = "identity", position = position_dodge(preserve = "single"), width = 0.7) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
+  # Add text labels
+  geom_text(aes(label = scales::comma(count)), 
+            position = position_dodge(width = 0.8), 
+            hjust = -0.1,    # Push text slightly to the right of the bar end
+            size = 5,        # Font size of the numbers
+            fontface = "bold") +
   coord_flip() + # Makes it horizontal
   scale_fill_manual(values = c("Peaks" = "#7030A0",            # Purple
                                "Active Enhancers" = "#0070C0", # Dark Blue
                                "Enhancer Genes" = "#00B0F0")) + # Light Blue
-  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) + # Starts at exactly 0
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) + # Starts at exactly 0
   labs(x = NULL, y = NULL, fill = NULL) +
   theme_minimal() +
   theme(
@@ -167,7 +173,8 @@ ggplot(hist_data, aes(x = sample, y = count, fill = variable)) +
     # --- Clean up Grid ---
     panel.grid.major.y = element_blank(), 
     panel.grid.minor = element_blank(),
-    axis.line.x = element_line(color = "gray80")
+    axis.line.x = element_line(color = "gray80"), 
+    plot.margin = margin(10, 20, 10, 10) # Adds a bit of margin around the whole plot
   )
 
 ```

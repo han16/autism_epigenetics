@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5fd3b0ab04c5a9c796d2269bca2577a1ba648824targetblank5fd3b0aa">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreeba760cc6f05d05043845a166d52a0118d4b07594targetblankba760cca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/5fd3b0ab04c5a9c796d2269bca2577a1ba648824" target="_blank">5fd3b0a</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/ba760cc6f05d05043845a166d52a0118d4b07594" target="_blank">ba760cc</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5fd3b0ab04c5a9c796d2269bca2577a1ba648824targetblank5fd3b0aa"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreeba760cc6f05d05043845a166d52a0118d4b07594targetblankba760cca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/5fd3b0ab04c5a9c796d2269bca2577a1ba648824" target="_blank">5fd3b0a</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/ba760cc6f05d05043845a166d52a0118d4b07594" target="_blank">ba760cc</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -613,6 +613,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/ba760cc6f05d05043845a166d52a0118d4b07594/analysis/figure2_analysis.Rmd" target="_blank">ba760cc</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-03
+</td>
+<td>
+3/3/2026
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/ba760cc6f05d05043845a166d52a0118d4b07594/docs/figure2_analysis.html" target="_blank">ba760cc</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-03
+</td>
+<td>
+3/3/2026
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -766,12 +800,18 @@ hist_data$variable &lt;- factor(hist_data$variable,
 
 #  Draw the plot
 ggplot(hist_data, aes(x = sample, y = count, fill = variable)) +
-  geom_bar(stat = &quot;identity&quot;, position = position_dodge(preserve = &quot;single&quot;), width = 0.7) +
+  geom_bar(stat = &quot;identity&quot;, position = position_dodge(width = 0.8), width = 0.7) +
+  # Add text labels
+  geom_text(aes(label = scales::comma(count)), 
+            position = position_dodge(width = 0.8), 
+            hjust = -0.1,    # Push text slightly to the right of the bar end
+            size = 5,        # Font size of the numbers
+            fontface = &quot;bold&quot;) +
   coord_flip() + # Makes it horizontal
   scale_fill_manual(values = c(&quot;Peaks&quot; = &quot;#7030A0&quot;,            # Purple
                                &quot;Active Enhancers&quot; = &quot;#0070C0&quot;, # Dark Blue
                                &quot;Enhancer Genes&quot; = &quot;#00B0F0&quot;)) + # Light Blue
-  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) + # Starts at exactly 0
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) + # Starts at exactly 0
   labs(x = NULL, y = NULL, fill = NULL) +
   theme_minimal() +
   theme(
@@ -787,9 +827,47 @@ ggplot(hist_data, aes(x = sample, y = count, fill = variable)) +
     # --- Clean up Grid ---
     panel.grid.major.y = element_blank(), 
     panel.grid.minor = element_blank(),
-    axis.line.x = element_line(color = &quot;gray80&quot;)
+    axis.line.x = element_line(color = &quot;gray80&quot;), 
+    plot.margin = margin(10, 20, 10, 10) # Adds a bit of margin around the whole plot
   )</code></pre>
 <p><img src="figure/figure2_analysis.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/ba760cc6f05d05043845a166d52a0118d4b07594/docs/figure/figure2_analysis.Rmd/unnamed-chunk-5-1.png" target="_blank">ba760cc</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
