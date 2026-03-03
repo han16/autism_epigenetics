@@ -87,3 +87,88 @@ flx_active_enhancers_gr <- subsetByOverlaps(atac_distal_gr, flx_h3k27ac_gr)
 cat("Found", length(flx_active_enhancers_gr), "flx active distal enhancers.\n")
 
 ```
+
+```{r, message=F, warning=F}
+library(TxDb.Mmusculus.UCSC.mm10.knownGene) # For Mouse mm10 TSS
+library(org.Mm.eg.db)
+########## find enhancer genes 
+get_enhancer_genes <- function(enhancer_gr, max_distance = 100000) {
+  # 1. Get mm10 Gene/TSS annotations
+  genes_gr <- genes(TxDb.Mmusculus.UCSC.mm10.knownGene)
+  tss_gr <- resize(genes_gr, width = 1, fix = "start")
+  
+  # 2. Find the nearest TSS for each enhancer
+  # distanceToNearest returns a hits object with distance metadata
+  near_idx <- distanceToNearest(enhancer_gr, tss_gr)
+  
+  # 3. Extract and combine data
+  # queryHits: index of enhancer | subjectHits: index of gene
+  res <- as.data.frame(enhancer_gr[queryHits(near_idx)]) %>%
+    mutate(
+      gene_id = tss_gr$gene_id[subjectHits(near_idx)],
+      distance_to_tss = mcols(near_idx)$distance
+    )
+  
+  # 4. Map Entrez IDs to Gene Symbols
+  res$gene_symbol <- mapIds(org.Mm.eg.db, 
+                            keys = res$gene_id, 
+                            column = "SYMBOL", 
+                            keytype = "ENTREZID", 
+                            multiVals = "first")
+  
+  # 5. Clean up and filter by distance (default 100kb)
+  final_df <- res %>%
+    as_tibble() %>%
+    filter(distance_to_tss <= max_distance) %>%
+    dplyr::select(gene_symbol, distance_to_tss, gene_id, seqnames, start, end, everything()) %>%
+    arrange(distance_to_tss)
+  
+  message(paste("Mapped", nrow(final_df), "enhancers to genes within", max_distance/1000, "kb."))
+  
+  return(final_df)
+}
+cre_enhancer_gene=get_enhancer_genes(cre_active_enhancers_gr)
+flx_enhancer_gene=get_enhancer_genes(flx_active_enhancers_gr)
+```
+
+```{r, message=F, warning=F}
+# draw plot 2(A)
+cre_numbers=c(nrow(cre_h3k27ac_peaks), length(cre_active_enhancers_gr), length(unique(cre_enhancer_gene$gene_symbol)))
+flx_numbers=c(nrow(flx_h3k27ac_peaks), length(flx_active_enhancers_gr), length(unique(flx_enhancer_gene$gene_symbol)))
+
+hist_data=data.frame(count=c(cre_numbers, flx_numbers), variable=rep(c("Peaks", "Active Enhancers", "Enhancer Genes"), 2), sample=rep(c("Cre", "Flx"), each=3))
+
+
+
+# Set the order of the variables to match the image (Peaks at the top)
+hist_data$variable <- factor(hist_data$variable, 
+                             levels = c("Enhancer Genes", "Active Enhancers", "Peaks"))
+
+#  Draw the plot
+ggplot(hist_data, aes(x = sample, y = count, fill = variable)) +
+  geom_bar(stat = "identity", position = position_dodge(preserve = "single"), width = 0.7) +
+  coord_flip() + # Makes it horizontal
+  scale_fill_manual(values = c("Peaks" = "#7030A0",            # Purple
+                               "Active Enhancers" = "#0070C0", # Dark Blue
+                               "Enhancer Genes" = "#00B0F0")) + # Light Blue
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) + # Starts at exactly 0
+  labs(x = NULL, y = NULL, fill = NULL) +
+  theme_minimal() +
+  theme(
+    # --- Axis Text Customization ---
+    axis.text.y = element_text(face = "bold", size = 18, color = "black"),
+    axis.text.x = element_text(size = 14, color = "black", face = "bold"),
+    
+    # --- Legend Font Size Customization ---
+    legend.position = "bottom",
+    legend.text = element_text(size = 16, face = "bold"), # Increases legend text size
+    legend.key.size = unit(1.2, "cm"),                   # Makes the color boxes larger
+    
+    # --- Clean up Grid ---
+    panel.grid.major.y = element_blank(), 
+    panel.grid.minor = element_blank(),
+    axis.line.x = element_line(color = "gray80")
+  )
+
+```
+
