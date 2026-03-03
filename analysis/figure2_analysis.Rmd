@@ -1,0 +1,89 @@
+---
+title: "figure 2"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+date: "2026-03-03"
+---
+
+```{r, message=F, warning=F}
+rm(list=ls())
+library(rprojroot)
+library(dplyr)
+root <- rprojroot::find_rstudio_root_file()
+```
+
+
+
+## define active enhancer 
+
+* overlap ATAC seq peaks and H3k27ac peaks, and not within 2kb of TSS
+
+
+```{r, echo=F, message=F, warning=F}
+library(readxl)
+
+ ################ these peak windows are from tianxiang 
+cre_h3k27ac_peaks=read_excel("C:\\han\\Projects\\ShareShengtong\\ShareShengtong\\EpiBmal1Cerebellum\\Draft\\Files\\Figure2-PanelA_cre_h3k27ac_chip-seq_regions.xlsx", col_names=F)
+colnames(cre_h3k27ac_peaks)[1:3]=c("chr", "start", "end")
+
+flx_h3k27ac_peaks=read_excel("C:\\han\\Projects\\ShareShengtong\\ShareShengtong\\EpiBmal1Cerebellum\\Draft\\Files\\Figure2-PanelA_flx_h3k27ac_chip-seq_regions.xlsx", col_names=F)
+colnames(flx_h3k27ac_peaks)[1:3]=c("chr", "start", "end")
+
+########## ATAC peaks called from new sample 
+atac_peaks=read_excel(file.path(root, "../Data/Figures_Generation_Data/figure_1A.xlsx"))
+```
+
+
+
+```{r, message=F, warning=F}
+########### load libraries and set up 
+library(tidyverse)
+library(GenomicRanges)
+library(TxDb.Mmusculus.UCSC.mm10.knownGene) # For Mouse mm10 TSS
+
+
+# 1. Convert ATAC peaks (format chr1:start:end)
+atac_gr <- atac_peaks %>%
+  separate(peak_window, into = c("chr", "start", "end"), sep = ":", remove = FALSE) %>%
+  mutate(start = as.numeric(start), end = as.numeric(end)) %>%
+  makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+
+# 2. Convert H3K27ac peaks
+cre_h3k27ac_gr <- cre_h3k27ac_peaks %>%
+  mutate(
+    start = as.numeric(start),
+    end   = as.numeric(end)
+  ) %>%
+  makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+
+flx_h3k27ac_gr <- flx_h3k27ac_peaks %>%
+  mutate(
+    start = as.numeric(start),
+    end   = as.numeric(end)
+  ) %>%
+  makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+
+
+# Get TSS for mm10
+genes_gr <- genes(TxDb.Mmusculus.UCSC.mm10.knownGene)
+tss_gr <- resize(genes_gr, width = 1, fix = "start")
+# . Expand it to 2kb (1000bp on each side)
+# This is much safer than punion/shift
+tss_2kb_zone <- tss_gr + 1000
+
+# Filter ATAC windows that are NOT in the TSS zone (Distal regions)
+atac_distal_gr <- atac_gr[!overlapsAny(atac_gr, tss_2kb_zone)]
+
+# Filter ATAC windows that are NOT in the TSS zone
+# (i.e., they are > 1kb away from any TSS)
+atac_distal_gr <- atac_gr[!overlapsAny(atac_gr, tss_2kb_zone)]
+
+cre_active_enhancers_gr <- subsetByOverlaps(atac_distal_gr, cre_h3k27ac_gr)
+cat("Found", length(cre_active_enhancers_gr), "cre active distal enhancers.\n")
+
+flx_active_enhancers_gr <- subsetByOverlaps(atac_distal_gr, flx_h3k27ac_gr)
+cat("Found", length(flx_active_enhancers_gr), "flx active distal enhancers.\n")
+
+```
