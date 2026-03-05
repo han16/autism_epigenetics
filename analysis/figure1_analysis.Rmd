@@ -223,7 +223,10 @@ ggplot(plot_df, aes(x = mean_expr, y = log2FoldChange)) +
 plot_df %>% 
   dplyr::count(Typechange)
 
-
+############## output the peak windows 
+#library(writexl)
+#plot_df_to_save <- data.frame(peak_window = rownames(plot_df), plot_df)
+#write_xlsx(plot_df_to_save, file.path(root, "../Data/Figures_Generation_Data/figure_1A.xlsx"))
 ```
 
 

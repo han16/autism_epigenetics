@@ -179,3 +179,78 @@ ggplot(hist_data, aes(x = sample, y = count, fill = variable)) +
 
 ```
 
+**Active Enhancer Definition: ATAC peak windows intersect with  H3K27ac peak windows, except 2kb proximity of TSS**.
+
+
+
+```{r, message=F, warning=F}
+library(ggvenn)
+library(ggplot2)
+
+# 1. Define sets - Ensure Strengthened is first (Left) and Weakened is second (Right)
+venn_list <- list(
+  "Strengthened" = flx_active_enhancers_gr$peak_window[flx_active_enhancers_gr$Typechange %in% c("Strengthened", "Unchanged")],
+  "Weakened"     = flx_active_enhancers_gr$peak_window[flx_active_enhancers_gr$Typechange %in% c("Weakened", "Unchanged")]
+)
+
+# 2. Plot with specific label placements
+ggvenn(venn_list, 
+       fill_color = c("#CCEEFF", "#66CCEE"),
+       stroke_size = 1.5, 
+       set_name_size = 0,      # Hide default set names so we can place them manually
+       text_size = 6,
+       show_percentage = T) +
+  # Label for "Strengthened" (Top Left)
+  annotate("text", x = -1.2, y = 1.2, label = "Strengthened", 
+           size = 6, fontface = "bold") +
+  # Label for "Weakened" (Top Right)
+  annotate("text", x = 1.2, y = 1.2, label = "Weakened", 
+           size = 6, fontface = "bold") +
+  # Label for "Unchanged" (Bottom Middle of intersection)
+  annotate("text", x = 0, y = -1.1, label = "Unchanged", 
+           size = 6, fontface = "bold") +
+  labs(title = "Flx Active Enhancers") +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 22, face = "bold", vjust = 2),
+    plot.margin = margin(20, 20, 20, 20)
+  )
+```
+
+* here is shown Flx enhancers only, not cre enhancers 
+
+
+
+```{r, message=F, warning=F}
+library(ggvenn)
+library(ggplot2)
+
+# 1. Define sets - Ensure Strengthened is first (Left) and Weakened is second (Right)
+venn_list <- list(
+  "Strengthened" = flx_enhancer_gene$gene_symbol[flx_enhancer_gene$Typechange %in% c("Strengthened", "Unchanged")],
+  "Weakened"     = flx_enhancer_gene$gene_symbol[flx_enhancer_gene$Typechange %in% c("Weakened", "Unchanged")]
+)
+
+# 2. Plot with specific label placements
+ggvenn(venn_list, 
+       fill_color = c("#CCEEFF", "#66CCEE"),
+       stroke_size = 1.5, 
+       set_name_size = 0,      # Hide default set names so we can place them manually
+       text_size = 6,
+       show_percentage = T) +
+  # Label for "Strengthened" (Top Left)
+  annotate("text", x = -1.2, y = 1.2, label = "Strengthened", 
+           size = 6, fontface = "bold") +
+  # Label for "Weakened" (Top Right)
+  annotate("text", x = 1.2, y = 1.2, label = "Weakened", 
+           size = 6, fontface = "bold") +
+  # Label for "Unchanged" (Bottom Middle of intersection)
+  annotate("text", x = 0, y = -1.1, label = "Unchanged", 
+           size = 6, fontface = "bold") +
+  labs(title = "Flx  Enhancer Genes") +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 22, face = "bold", vjust = 2),
+    plot.margin = margin(20, 20, 20, 20)
+  )
+```

@@ -379,7 +379,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -390,8 +390,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -400,13 +400,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-03-03
+<strong>Last updated:</strong> 2026-03-05
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>autism_epigenetics/</code> <span
@@ -429,18 +429,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -531,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree6351ca49214aa3cbe940af9af2633902e31ea6cftargetblank6351ca4a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5e9dcbde298a13c772c053a7736934e8e916523atargetblank5e9dcbda">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/6351ca49214aa3cbe940af9af2633902e31ea6cf" target="_blank">6351ca4</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/5e9dcbde298a13c772c053a7736934e8e916523a" target="_blank">5e9dcbd</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree6351ca49214aa3cbe940af9af2633902e31ea6cftargetblank6351ca4a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5e9dcbde298a13c772c053a7736934e8e916523atargetblank5e9dcbda"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -549,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/6351ca49214aa3cbe940af9af2633902e31ea6cf" target="_blank">6351ca4</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/5e9dcbde298a13c772c053a7736934e8e916523a" target="_blank">5e9dcbd</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -563,8 +566,9 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
-Untracked files:
-    Untracked:  analysis/figure2_analysis.Rmd
+Unstaged changes:
+    Modified:   analysis/figure1_analysis.Rmd
+    Modified:   analysis/figure2_analysis.Rmd
 
 </code></pre>
 <p>
@@ -610,6 +614,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/5fd3b0ab04c5a9c796d2269bca2577a1ba648824/docs/figure1_analysis.html" target="_blank">5fd3b0a</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-03
+</td>
+<td>
+3/3/2026
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1193,6 +1214,10 @@ han
 1 Strengthened   8700
 2    Unchanged 218749
 3     Weakened  10485</code></pre>
+<pre class="r"><code>############## output the peak windows 
+#library(writexl)
+#plot_df_to_save &lt;- data.frame(peak_window = rownames(plot_df), plot_df)
+#write_xlsx(plot_df_to_save, file.path(root, &quot;../Data/Figures_Generation_Data/figure_1A.xlsx&quot;))</code></pre>
 <pre class="r"><code>#################### normalize counts 
 
 # variance-stabilizing transform
@@ -1356,13 +1381,13 @@ return(plot_ready)
 }
 
 plot_ready=prepare_data_for_peak_distribution(plot_df %&gt;% filter(Typechange==&quot;Strengthened&quot;))</code></pre>
-<pre><code>&gt;&gt; preparing features information...         2026-03-03 10:24:58 AM 
-&gt;&gt; identifying nearest features...       2026-03-03 10:24:59 AM 
-&gt;&gt; calculating distance from peak to TSS...  2026-03-03 10:25:00 AM 
-&gt;&gt; assigning genomic annotation...       2026-03-03 10:25:00 AM 
-&gt;&gt; adding gene annotation...             2026-03-03 10:25:14 AM 
-&gt;&gt; assigning chromosome lengths          2026-03-03 10:25:14 AM 
-&gt;&gt; done...                   2026-03-03 10:25:14 AM </code></pre>
+<pre><code>&gt;&gt; preparing features information...         2026-03-05 10:20:38 AM 
+&gt;&gt; identifying nearest features...       2026-03-05 10:20:38 AM 
+&gt;&gt; calculating distance from peak to TSS...  2026-03-05 10:20:39 AM 
+&gt;&gt; assigning genomic annotation...       2026-03-05 10:20:39 AM 
+&gt;&gt; adding gene annotation...             2026-03-05 10:20:46 AM 
+&gt;&gt; assigning chromosome lengths          2026-03-05 10:20:47 AM 
+&gt;&gt; done...                   2026-03-05 10:20:47 AM </code></pre>
 <pre class="r"><code>sum(plot_ready$count)</code></pre>
 <pre><code>[1] 8699</code></pre>
 <pre class="r"><code>ggplot(plot_ready, aes(x = bin, y = percentage)) +
@@ -1483,13 +1508,13 @@ han
 </div>
 </div>
 <pre class="r"><code>plot_ready=prepare_data_for_peak_distribution(plot_df %&gt;% filter(Typechange==&quot;Weakened&quot;))</code></pre>
-<pre><code>&gt;&gt; preparing features information...         2026-03-03 10:25:15 AM 
-&gt;&gt; identifying nearest features...       2026-03-03 10:25:15 AM 
-&gt;&gt; calculating distance from peak to TSS...  2026-03-03 10:25:15 AM 
-&gt;&gt; assigning genomic annotation...       2026-03-03 10:25:15 AM 
-&gt;&gt; adding gene annotation...             2026-03-03 10:25:18 AM 
-&gt;&gt; assigning chromosome lengths          2026-03-03 10:25:18 AM 
-&gt;&gt; done...                   2026-03-03 10:25:18 AM </code></pre>
+<pre><code>&gt;&gt; preparing features information...         2026-03-05 10:20:47 AM 
+&gt;&gt; identifying nearest features...       2026-03-05 10:20:47 AM 
+&gt;&gt; calculating distance from peak to TSS...  2026-03-05 10:20:47 AM 
+&gt;&gt; assigning genomic annotation...       2026-03-05 10:20:47 AM 
+&gt;&gt; adding gene annotation...             2026-03-05 10:20:48 AM 
+&gt;&gt; assigning chromosome lengths          2026-03-05 10:20:48 AM 
+&gt;&gt; done...                   2026-03-05 10:20:48 AM </code></pre>
 <pre class="r"><code>sum(plot_ready$count)</code></pre>
 <pre><code>[1] 10483</code></pre>
 <pre class="r"><code>ggplot(plot_ready, aes(x = bin, y = percentage)) +
