@@ -17,5 +17,5 @@ editor_options:
 
 * [analysis in Figure 1](figure1_analysis.html)
 
-* [analysis in Figure 2](figure2_analayis.html)
+* [analysis in Figure 2](figure2_analysis.html)
 
