@@ -400,7 +400,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-03-05
+<strong>Last updated:</strong> 2026-03-19
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5e9dcbde298a13c772c053a7736934e8e916523atargetblank5e9dcbda">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree063e1e948d4f0a4ca7a5686f6241b0f02d2d9b84targetblank063e1e9a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/5e9dcbde298a13c772c053a7736934e8e916523a" target="_blank">5e9dcbd</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/063e1e948d4f0a4ca7a5686f6241b0f02d2d9b84" target="_blank">063e1e9</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree5e9dcbde298a13c772c053a7736934e8e916523atargetblank5e9dcbda"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree063e1e948d4f0a4ca7a5686f6241b0f02d2d9b84targetblank063e1e9a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/5e9dcbde298a13c772c053a7736934e8e916523a" target="_blank">5e9dcbd</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/063e1e948d4f0a4ca7a5686f6241b0f02d2d9b84" target="_blank">063e1e9</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -566,10 +566,17 @@ depends on. Below is the status of the Git repository when the results
 were generated:
 </p>
 <pre><code>
+Ignored files:
+    Ignored:    Fig2B_peak_windows/
+    Ignored:    Figures/
+
+Untracked files:
+    Untracked:  ATAC_Ultra_Sharp.png
+    Untracked:  figure_2B_Cre_Gained.bed
+    Untracked:  figure_2B_Cre_Lost.bed
+
 Unstaged changes:
-    Modified:   analysis/figure1_analysis.Rmd
     Modified:   analysis/figure2_analysis.Rmd
-    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -615,6 +622,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/91488942bfbf84bb5926c805892d4d9441b8c5f3/analysis/figure2_analysis.Rmd" target="_blank">9148894</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-05
+</td>
+<td>
+3/5/2026
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/91488942bfbf84bb5926c805892d4d9441b8c5f3/docs/figure2_analysis.html" target="_blank">9148894</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-05
+</td>
+<td>
+3/5/2026
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -740,11 +781,26 @@ library(GenomicRanges)
 library(TxDb.Mmusculus.UCSC.mm10.knownGene) # For Mouse mm10 TSS
 
 
-# 1. Convert ATAC peaks (format chr1:start:end)
+# 1. Convert ATAC peaks (format chr1:start:end)   # this is union peak 
 atac_gr &lt;- atac_peaks %&gt;%
   separate(peak_window, into = c(&quot;chr&quot;, &quot;start&quot;, &quot;end&quot;), sep = &quot;:&quot;, remove = FALSE) %&gt;%
   mutate(start = as.numeric(start), end = as.numeric(end)) %&gt;%
   makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+
+### this is cre peaks 
+colnames(cre_atac_peaks)[1:3] &lt;- c(&quot;chr&quot;, &quot;start&quot;, &quot;end&quot;)
+# Convert to GRanges
+cre_atac_gr &lt;- cre_atac_peaks %&gt;%
+  makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+
+### this is flx peaks 
+colnames(flx_atac_peaks)[1:3] &lt;- c(&quot;chr&quot;, &quot;start&quot;, &quot;end&quot;)
+# Convert to GRanges
+flx_atac_gr &lt;- flx_atac_peaks %&gt;%
+  makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+
+
+
 
 # 2. Convert H3K27ac peaks
 cre_h3k27ac_gr &lt;- cre_h3k27ac_peaks %&gt;%
@@ -770,18 +826,16 @@ tss_gr &lt;- resize(genes_gr, width = 1, fix = &quot;start&quot;)
 tss_2kb_zone &lt;- tss_gr + 1000
 
 # Filter ATAC windows that are NOT in the TSS zone (Distal regions)
-atac_distal_gr &lt;- atac_gr[!overlapsAny(atac_gr, tss_2kb_zone)]
+cre_atac_distal_gr &lt;- atac_gr[!overlapsAny(cre_atac_gr, tss_2kb_zone)]
+flx_atac_distal_gr &lt;- atac_gr[!overlapsAny(flx_atac_gr, tss_2kb_zone)]
 
-# Filter ATAC windows that are NOT in the TSS zone
-# (i.e., they are &gt; 1kb away from any TSS)
-atac_distal_gr &lt;- atac_gr[!overlapsAny(atac_gr, tss_2kb_zone)]
 
-cre_active_enhancers_gr &lt;- subsetByOverlaps(atac_distal_gr, cre_h3k27ac_gr)
+cre_active_enhancers_gr &lt;- subsetByOverlaps(cre_atac_distal_gr, cre_h3k27ac_gr)
 cat(&quot;Found&quot;, length(cre_active_enhancers_gr), &quot;cre active distal enhancers.\n&quot;)</code></pre>
-<pre><code>Found 28223 cre active distal enhancers.</code></pre>
-<pre class="r"><code>flx_active_enhancers_gr &lt;- subsetByOverlaps(atac_distal_gr, flx_h3k27ac_gr)
+<pre><code>Found 35340 cre active distal enhancers.</code></pre>
+<pre class="r"><code>flx_active_enhancers_gr &lt;- subsetByOverlaps(flx_atac_distal_gr, flx_h3k27ac_gr)
 cat(&quot;Found&quot;, length(flx_active_enhancers_gr), &quot;flx active distal enhancers.\n&quot;)</code></pre>
-<pre><code>Found 43593 flx active distal enhancers.</code></pre>
+<pre><code>Found 50244 flx active distal enhancers.</code></pre>
 <pre class="r"><code>library(TxDb.Mmusculus.UCSC.mm10.knownGene) # For Mouse mm10 TSS
 library(org.Mm.eg.db)
 ########## find enhancer genes 
@@ -826,7 +880,8 @@ flx_enhancer_gene=get_enhancer_genes(flx_active_enhancers_gr)</code></pre>
 cre_numbers=c(nrow(cre_h3k27ac_peaks), length(cre_active_enhancers_gr), length(unique(cre_enhancer_gene$gene_symbol)))
 flx_numbers=c(nrow(flx_h3k27ac_peaks), length(flx_active_enhancers_gr), length(unique(flx_enhancer_gene$gene_symbol)))
 
-hist_data=data.frame(count=c(cre_numbers, flx_numbers), variable=rep(c(&quot;Peaks&quot;, &quot;Active Enhancers&quot;, &quot;Enhancer Genes&quot;), 2), sample=rep(c(&quot;Cre&quot;, &quot;Flx&quot;), each=3))
+hist_data=data.frame(count=c(flx_numbers, cre_numbers), variable=rep(c(&quot;Peaks&quot;, &quot;Active Enhancers&quot;, &quot;Enhancer Genes&quot;), 2), sample=rep(c(&quot;Flx&quot;, &quot;Cre&quot;), each=3))
+hist_data$sample &lt;- factor(hist_data$sample, levels = c(&quot;Flx&quot;, &quot;Cre&quot;))  # this ensures Cre on the top and Flx at the bottom 
 
 
 
@@ -915,50 +970,117 @@ han
 </table>
 </div>
 </div>
-<p><strong>Active Enhancer Definition: ATAC peak windows intersect with
-H3K27ac peak windows, except 2kb proximity of TSS</strong>.</p>
-<pre class="r"><code>library(ggvenn)
-library(ggplot2)
+<ol style="list-style-type: decimal">
+<li><p><strong>Active Enhancer Definition: ATAC peak windows intersect
+with H3K27ac peak windows, except 2kb proximity of
+TSS</strong>.</p></li>
+<li><p>ATAC peaks: use Cre and Flx specific narrowPeak windows called
+from 2 combined replicates</p></li>
+<li><p><strong>enhancer genes: the nearest gene for each
+enhancer</strong></p></li>
+</ol>
+<pre class="r"><code>library(GenomicRanges)
+library(dplyr)
+library(ggvenn)
 
-# 1. Define sets - Ensure Strengthened is first (Left) and Weakened is second (Right)
+# 1. Set your cutoff
+length_cutoff &lt;- 1000  # Try 10, then 1000, then 5000
+
+# 2. Find overlaps and filter by width
+overlaps &lt;- findOverlaps(cre_active_enhancers_gr, flx_active_enhancers_gr)
+overlap_widths &lt;- width(pintersect(cre_active_enhancers_gr[queryHits(overlaps)], 
+                                   flx_active_enhancers_gr[subjectHits(overlaps)]))
+
+# 3. Identify pairs that meet the cutoff
+valid_hits &lt;- overlaps[overlap_widths &gt;= length_cutoff]
+length(valid_hits)</code></pre>
+<pre><code>[1] 9605</code></pre>
+<pre class="r"><code># 4. CREATE ENTIRELY UNIQUE IDs (Crucial Step)
+#  generate random unique strings so NO peak matches by default
+cre_unique_ids &lt;- paste0(&quot;Cre_Peak_&quot;, seq_along(cre_active_enhancers_gr))
+flx_unique_ids &lt;- paste0(&quot;Flx_Peak_&quot;, seq_along(flx_active_enhancers_gr))
+
+# 5. FORCE MATCHES ONLY FOR VALID HITS
+# If they pass the filter, give them the SAME ID in both lists
+match_ids &lt;- paste0(&quot;Match_&quot;, seq_along(valid_hits))
+cre_unique_ids[queryHits(valid_hits)] &lt;- match_ids
+flx_unique_ids[subjectHits(valid_hits)] &lt;- match_ids
+
+# 6. Build the list for ggvenn
 venn_list &lt;- list(
-  &quot;Strengthened&quot; = flx_active_enhancers_gr$peak_window[flx_active_enhancers_gr$Typechange %in% c(&quot;Strengthened&quot;, &quot;Unchanged&quot;)],
-  &quot;Weakened&quot;     = flx_active_enhancers_gr$peak_window[flx_active_enhancers_gr$Typechange %in% c(&quot;Weakened&quot;, &quot;Unchanged&quot;)]
+  &quot;Cre-Gained&quot; = cre_unique_ids,
+  &quot;Cre-Lost&quot;   = flx_unique_ids
 )
 
-# 2. Plot with specific label placements
+# 7. Plot
 ggvenn(venn_list, 
        fill_color = c(&quot;#CCEEFF&quot;, &quot;#66CCEE&quot;),
        stroke_size = 1.5, 
-       set_name_size = 0,      # Hide default set names so we can place them manually
+       set_name_size = 0, 
        text_size = 6,
-       show_percentage = T) +
-  # Label for &quot;Strengthened&quot; (Top Left)
-  annotate(&quot;text&quot;, x = -1.2, y = 1.2, label = &quot;Strengthened&quot;, 
-           size = 6, fontface = &quot;bold&quot;) +
-  # Label for &quot;Weakened&quot; (Top Right)
-  annotate(&quot;text&quot;, x = 1.2, y = 1.2, label = &quot;Weakened&quot;, 
-           size = 6, fontface = &quot;bold&quot;) +
-  # Label for &quot;Unchanged&quot; (Bottom Middle of intersection)
-  annotate(&quot;text&quot;, x = 0, y = -1.1, label = &quot;Unchanged&quot;, 
-           size = 6, fontface = &quot;bold&quot;) +
-  labs(title = &quot;Flx Active Enhancers&quot;) +
-  theme_void() +
+       show_percentage = TRUE) +
+  annotate(&quot;text&quot;, x = -1.2, y = 1.2, label = &quot;Cre-Gained&quot;, size = 6, fontface = &quot;bold&quot;) +
+  annotate(&quot;text&quot;, x = 1.2, y = 1.2, label = &quot;Cre-Lost&quot;, size = 6, fontface = &quot;bold&quot;) +
+  annotate(&quot;text&quot;, x = 0, y = -1.1, label = &quot;Unchanged&quot;, size = 6, fontface = &quot;bold&quot;) +
+  labs(title = paste0(&quot;Active Enhancers (Cutoff: &quot;, length_cutoff, &quot;bp)&quot;)) +
+  theme_void()+
   theme(
-    plot.title = element_text(hjust = 0.5, size = 22, face = &quot;bold&quot;, vjust = 2),
+    plot.title = element_text(hjust = 0.5,     # Centers the title
+                             size = 22,        # Large size
+                             face = &quot;bold&quot;,    # Bolds the title
+                             vjust = 2),       # Adds vertical spacing
     plot.margin = margin(20, 20, 20, 20)
   )</code></pre>
 <p><img src="figure/figure2_analysis.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/91488942bfbf84bb5926c805892d4d9441b8c5f3/docs/figure/figure2_analysis.Rmd/unnamed-chunk-6-1.png" target="_blank">9148894</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <ul>
-<li>here is shown Flx enhancers only, not cre enhancers</li>
+<li>Cre-Gained: active enhancers only in Cre; Cre-Lost: active enhancers
+only in Flx; Unchanged: active enhancers in both cre and flx with
+overlap greater than cutoff.</li>
 </ul>
 <pre class="r"><code>library(ggvenn)
 library(ggplot2)
 
 # 1. Define sets - Ensure Strengthened is first (Left) and Weakened is second (Right)
 venn_list &lt;- list(
-  &quot;Strengthened&quot; = flx_enhancer_gene$gene_symbol[flx_enhancer_gene$Typechange %in% c(&quot;Strengthened&quot;, &quot;Unchanged&quot;)],
-  &quot;Weakened&quot;     = flx_enhancer_gene$gene_symbol[flx_enhancer_gene$Typechange %in% c(&quot;Weakened&quot;, &quot;Unchanged&quot;)]
+  &quot;Uniq-Cre-Gained&quot; = cre_enhancer_gene$gene_symbol,
+  &quot;Uniq-Cre-Lost&quot;     = flx_enhancer_gene$gene_symbol
 )
 
 # 2. Plot with specific label placements
@@ -969,21 +1091,58 @@ ggvenn(venn_list,
        text_size = 6,
        show_percentage = T) +
   # Label for &quot;Strengthened&quot; (Top Left)
-  annotate(&quot;text&quot;, x = -1.2, y = 1.2, label = &quot;Strengthened&quot;, 
+  annotate(&quot;text&quot;, x = -1.2, y = 1.2, label = &quot;Uniq-Cre-Gained&quot;, 
            size = 6, fontface = &quot;bold&quot;) +
   # Label for &quot;Weakened&quot; (Top Right)
-  annotate(&quot;text&quot;, x = 1.2, y = 1.2, label = &quot;Weakened&quot;, 
+  annotate(&quot;text&quot;, x = 1.2, y = 1.2, label = &quot;Uniq-Cre-Lost&quot;, 
            size = 6, fontface = &quot;bold&quot;) +
   # Label for &quot;Unchanged&quot; (Bottom Middle of intersection)
   annotate(&quot;text&quot;, x = 0, y = -1.1, label = &quot;Unchanged&quot;, 
            size = 6, fontface = &quot;bold&quot;) +
-  labs(title = &quot;Flx  Enhancer Genes&quot;) +
+  labs(title = &quot;Enhancer Genes&quot;) +
   theme_void() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 22, face = &quot;bold&quot;, vjust = 2),
-    plot.margin = margin(20, 20, 20, 20)
+    plot.margin = margin(10, 10, 10, 10)
   )</code></pre>
 <p><img src="figure/figure2_analysis.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/91488942bfbf84bb5926c805892d4d9441b8c5f3/docs/figure/figure2_analysis.Rmd/unnamed-chunk-7-1.png" target="_blank">9148894</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-05
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">

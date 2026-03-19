@@ -32,7 +32,11 @@ flx_h3k27ac_peaks=read_excel("C:\\han\\Projects\\ShareShengtong\\ShareShengtong\
 colnames(flx_h3k27ac_peaks)[1:3]=c("chr", "start", "end")
 
 ########## ATAC peaks called from new sample 
-atac_peaks=read_excel(file.path(root, "../Data/Figures_Generation_Data/figure_1A.xlsx"))
+atac_peaks=read_excel(file.path(root, "../Data/Figures_Generation_Data/figure_1A.xlsx")) # this is union peaks from both cre and flx 
+
+cre_atac_peaks=as_tibble(read.table(file.path(root, "../Data/Novogene/PeakWindows/Cere_C_merged_peaks.narrowPeak")))
+
+flx_atac_peaks=as_tibble(read.table(file.path(root, "../Data/Novogene/PeakWindows/Cere_K_merged_peaks.narrowPeak")))
 ```
 
 
@@ -44,11 +48,26 @@ library(GenomicRanges)
 library(TxDb.Mmusculus.UCSC.mm10.knownGene) # For Mouse mm10 TSS
 
 
-# 1. Convert ATAC peaks (format chr1:start:end)
+# 1. Convert ATAC peaks (format chr1:start:end)   # this is union peak 
 atac_gr <- atac_peaks %>%
   separate(peak_window, into = c("chr", "start", "end"), sep = ":", remove = FALSE) %>%
   mutate(start = as.numeric(start), end = as.numeric(end)) %>%
   makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+
+### this is cre peaks 
+colnames(cre_atac_peaks)[1:3] <- c("chr", "start", "end")
+# Convert to GRanges
+cre_atac_gr <- cre_atac_peaks %>%
+  makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+
+### this is flx peaks 
+colnames(flx_atac_peaks)[1:3] <- c("chr", "start", "end")
+# Convert to GRanges
+flx_atac_gr <- flx_atac_peaks %>%
+  makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+
+
+
 
 # 2. Convert H3K27ac peaks
 cre_h3k27ac_gr <- cre_h3k27ac_peaks %>%
@@ -74,16 +93,14 @@ tss_gr <- resize(genes_gr, width = 1, fix = "start")
 tss_2kb_zone <- tss_gr + 1000
 
 # Filter ATAC windows that are NOT in the TSS zone (Distal regions)
-atac_distal_gr <- atac_gr[!overlapsAny(atac_gr, tss_2kb_zone)]
+cre_atac_distal_gr <- atac_gr[!overlapsAny(cre_atac_gr, tss_2kb_zone)]
+flx_atac_distal_gr <- atac_gr[!overlapsAny(flx_atac_gr, tss_2kb_zone)]
 
-# Filter ATAC windows that are NOT in the TSS zone
-# (i.e., they are > 1kb away from any TSS)
-atac_distal_gr <- atac_gr[!overlapsAny(atac_gr, tss_2kb_zone)]
 
-cre_active_enhancers_gr <- subsetByOverlaps(atac_distal_gr, cre_h3k27ac_gr)
+cre_active_enhancers_gr <- subsetByOverlaps(cre_atac_distal_gr, cre_h3k27ac_gr)
 cat("Found", length(cre_active_enhancers_gr), "cre active distal enhancers.\n")
 
-flx_active_enhancers_gr <- subsetByOverlaps(atac_distal_gr, flx_h3k27ac_gr)
+flx_active_enhancers_gr <- subsetByOverlaps(flx_atac_distal_gr, flx_h3k27ac_gr)
 cat("Found", length(flx_active_enhancers_gr), "flx active distal enhancers.\n")
 
 ```
@@ -131,12 +148,15 @@ cre_enhancer_gene=get_enhancer_genes(cre_active_enhancers_gr)
 flx_enhancer_gene=get_enhancer_genes(flx_active_enhancers_gr)
 ```
 
+
+
 ```{r, message=F, warning=F}
 # draw plot 2(A)
 cre_numbers=c(nrow(cre_h3k27ac_peaks), length(cre_active_enhancers_gr), length(unique(cre_enhancer_gene$gene_symbol)))
 flx_numbers=c(nrow(flx_h3k27ac_peaks), length(flx_active_enhancers_gr), length(unique(flx_enhancer_gene$gene_symbol)))
 
-hist_data=data.frame(count=c(cre_numbers, flx_numbers), variable=rep(c("Peaks", "Active Enhancers", "Enhancer Genes"), 2), sample=rep(c("Cre", "Flx"), each=3))
+hist_data=data.frame(count=c(flx_numbers, cre_numbers), variable=rep(c("Peaks", "Active Enhancers", "Enhancer Genes"), 2), sample=rep(c("Flx", "Cre"), each=3))
+hist_data$sample <- factor(hist_data$sample, levels = c("Flx", "Cre"))  # this ensures Cre on the top and Flx at the bottom 
 
 
 
@@ -179,45 +199,87 @@ ggplot(hist_data, aes(x = sample, y = count, fill = variable)) +
 
 ```
 
-**Active Enhancer Definition: ATAC peak windows intersect with  H3K27ac peak windows, except 2kb proximity of TSS**.
+
+
+1. **Active Enhancer Definition: ATAC peak windows intersect with  H3K27ac peak windows, except 2kb proximity of TSS**.
+
+2. ATAC peaks: use Cre and Flx specific narrowPeak windows called from 2 combined replicates  
+
+3. **enhancer genes: the nearest gene for each enhancer**
+
+
+
 
 
 
 ```{r, message=F, warning=F}
+library(GenomicRanges)
+library(dplyr)
 library(ggvenn)
-library(ggplot2)
 
-# 1. Define sets - Ensure Strengthened is first (Left) and Weakened is second (Right)
+# 1. Set your cutoff
+length_cutoff <- 1000  # Try 10, then 1000, then 5000
+
+# 2. Find overlaps and filter by width
+overlaps <- findOverlaps(cre_active_enhancers_gr, flx_active_enhancers_gr)
+overlap_widths <- width(pintersect(cre_active_enhancers_gr[queryHits(overlaps)], 
+                                   flx_active_enhancers_gr[subjectHits(overlaps)]))
+
+# 3. Identify pairs that meet the cutoff
+valid_hits <- overlaps[overlap_widths >= length_cutoff]
+length(valid_hits)
+
+# 4. CREATE ENTIRELY UNIQUE IDs (Crucial Step)
+#  generate random unique strings so NO peak matches by default
+cre_unique_ids <- paste0("Cre_Peak_", seq_along(cre_active_enhancers_gr))
+flx_unique_ids <- paste0("Flx_Peak_", seq_along(flx_active_enhancers_gr))
+
+# 5. FORCE MATCHES ONLY FOR VALID HITS
+# If they pass the filter, give them the SAME ID in both lists
+match_ids <- paste0("Match_", seq_along(valid_hits))
+cre_unique_ids[queryHits(valid_hits)] <- match_ids
+flx_unique_ids[subjectHits(valid_hits)] <- match_ids
+
+# 6. Build the list for ggvenn
 venn_list <- list(
-  "Strengthened" = flx_active_enhancers_gr$peak_window[flx_active_enhancers_gr$Typechange %in% c("Strengthened", "Unchanged")],
-  "Weakened"     = flx_active_enhancers_gr$peak_window[flx_active_enhancers_gr$Typechange %in% c("Weakened", "Unchanged")]
+  "Cre-Gained" = cre_unique_ids,
+  "Cre-Lost"   = flx_unique_ids
 )
 
-# 2. Plot with specific label placements
+# 7. Plot
 ggvenn(venn_list, 
        fill_color = c("#CCEEFF", "#66CCEE"),
        stroke_size = 1.5, 
-       set_name_size = 0,      # Hide default set names so we can place them manually
+       set_name_size = 0, 
        text_size = 6,
-       show_percentage = T) +
-  # Label for "Strengthened" (Top Left)
-  annotate("text", x = -1.2, y = 1.2, label = "Strengthened", 
-           size = 6, fontface = "bold") +
-  # Label for "Weakened" (Top Right)
-  annotate("text", x = 1.2, y = 1.2, label = "Weakened", 
-           size = 6, fontface = "bold") +
-  # Label for "Unchanged" (Bottom Middle of intersection)
-  annotate("text", x = 0, y = -1.1, label = "Unchanged", 
-           size = 6, fontface = "bold") +
-  labs(title = "Flx Active Enhancers") +
-  theme_void() +
+       show_percentage = TRUE) +
+  annotate("text", x = -1.2, y = 1.2, label = "Cre-Gained", size = 6, fontface = "bold") +
+  annotate("text", x = 1.2, y = 1.2, label = "Cre-Lost", size = 6, fontface = "bold") +
+  annotate("text", x = 0, y = -1.1, label = "Unchanged", size = 6, fontface = "bold") +
+  labs(title = paste0("Active Enhancers (Cutoff: ", length_cutoff, "bp)")) +
+  theme_void()+
   theme(
-    plot.title = element_text(hjust = 0.5, size = 22, face = "bold", vjust = 2),
+    plot.title = element_text(hjust = 0.5,     # Centers the title
+                             size = 22,        # Large size
+                             face = "bold",    # Bolds the title
+                             vjust = 2),       # Adds vertical spacing
     plot.margin = margin(20, 20, 20, 20)
   )
 ```
 
-* here is shown Flx enhancers only, not cre enhancers 
+
+
+
+
+* Cre-Gained: active enhancers only in Cre; Cre-Lost: active enhancers only in Flx; Unchanged: active enhancers in both cre and flx with overlap greater than cutoff.   
+
+
+
+
+
+
+
+
 
 
 
@@ -227,8 +289,8 @@ library(ggplot2)
 
 # 1. Define sets - Ensure Strengthened is first (Left) and Weakened is second (Right)
 venn_list <- list(
-  "Strengthened" = flx_enhancer_gene$gene_symbol[flx_enhancer_gene$Typechange %in% c("Strengthened", "Unchanged")],
-  "Weakened"     = flx_enhancer_gene$gene_symbol[flx_enhancer_gene$Typechange %in% c("Weakened", "Unchanged")]
+  "Uniq-Cre-Gained" = cre_enhancer_gene$gene_symbol,
+  "Uniq-Cre-Lost"     = flx_enhancer_gene$gene_symbol
 )
 
 # 2. Plot with specific label placements
@@ -239,18 +301,18 @@ ggvenn(venn_list,
        text_size = 6,
        show_percentage = T) +
   # Label for "Strengthened" (Top Left)
-  annotate("text", x = -1.2, y = 1.2, label = "Strengthened", 
+  annotate("text", x = -1.2, y = 1.2, label = "Uniq-Cre-Gained", 
            size = 6, fontface = "bold") +
   # Label for "Weakened" (Top Right)
-  annotate("text", x = 1.2, y = 1.2, label = "Weakened", 
+  annotate("text", x = 1.2, y = 1.2, label = "Uniq-Cre-Lost", 
            size = 6, fontface = "bold") +
   # Label for "Unchanged" (Bottom Middle of intersection)
   annotate("text", x = 0, y = -1.1, label = "Unchanged", 
            size = 6, fontface = "bold") +
-  labs(title = "Flx  Enhancer Genes") +
+  labs(title = "Enhancer Genes") +
   theme_void() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 22, face = "bold", vjust = 2),
-    plot.margin = margin(20, 20, 20, 20)
+    plot.margin = margin(10, 10, 10, 10)
   )
 ```
