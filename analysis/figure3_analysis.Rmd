@@ -1,0 +1,147 @@
+---
+title: "figure 3"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+    toc: true
+date: "2026-03-31"
+---
+
+
+```{r, message=F, warning=F}
+rm(list=ls())
+library(rprojroot)
+library(dplyr)
+root <- rprojroot::find_rstudio_root_file()
+```
+
+
+
+
+```{r, message=F, warning=F}
+library(readxl)
+library(tidyverse)
+
+path="C:\\han\\Projects\\ShareShengtong\\ShareShengtong\\EpiBmal1Cerebellum\\Draft\\Files\\"
+
+venn_Fig3OfASD_Cre_Common_DownRGs=read_xlsx(paste0(path, "venn_Fig3OfASD_Cre-Common_DownRGs.xlsx"))
+
+venn_Fig3OfASD_Cre_Common_UpRGs=read_xlsx(paste0(path, "venn_Fig3OfASD_Cre-Common_UpRGs.xlsx"))
+
+venn_Fig3OfASD_Cre_Uniq_Gained_UpRGs=read_xlsx(paste0(path, "venn_Fig3OfASD_Cre-Uniq-Gained_UpRGs.xlsx"))
+
+venn_Fig3OfASD_Cre_Uniq_Lost_DownRGs=read_xlsx(paste0(path, "venn_Fig3OfASD_Cre-Uniq-Lost_DownRGs.xlsx"))
+
+
+
+Uniq_Cre_Gained_gene=as_tibble(read.csv(file.path(root, "../Data/Figures_Generation_Data/figure_2B_Uniq_Cre_Gained_gene.csv")))
+
+Uniq_Cre_Lost_gene=as_tibble(read.csv(file.path(root, "../Data/Figures_Generation_Data/figure_2B_Uniq_Cre_Lost_gene.csv")))
+
+Common_enhancer_gene=as_tibble(read.csv(file.path(root, "../Data/Figures_Generation_Data/figure_2B_Common_enhancer_gene.csv")))
+
+```
+
+
+
+## Figure 3C 
+
+
+```{r, message=F, warning=F}
+library(ggvenn)
+
+UpRGS=c(venn_Fig3OfASD_Cre_Uniq_Gained_UpRGs$`Cre-Uniq-Gained ∩ UpRGs`, venn_Fig3OfASD_Cre_Uniq_Gained_UpRGs$UpRGs)
+
+UpRGS=UpRGS[!is.na(UpRGS)]
+
+
+library(VennDiagram)
+
+venn_list <- list(UpGs = UpRGS, `Uniq-Cre-Gained` = Uniq_Cre_Gained_gene$x)
+
+ggvenn(venn_list, 
+       fill_color = c("lightblue", "skyblue"),
+       stroke_size = 0.8,         # Slightly thicker border for "pop"
+       set_name_size = 6,         # Makes "UpGs" and "Uniq-Cre-Gained" larger
+       text_size = 8,             # Makes the numbers (172, 4, 452) clearer
+       show_percentage = FALSE) + # Usually cleaner for publication
+  theme(plot.title = element_text(face = "bold", hjust = 0.5)) +
+  # This line forces the set names to be bold if your system supports it
+  annotate("text", x = -0.8, y = 1.2, label = "", fontface = "bold")
+```
+
+
+
+
+
+```{r, message=F, warning=F}
+DownRGS=c(venn_Fig3OfASD_Cre_Uniq_Lost_DownRGs$`Cre-Uniq-Lost ∩ DownRGs`, venn_Fig3OfASD_Cre_Uniq_Lost_DownRGs$DownRGs)
+
+DownRGS=DownRGS[!is.na(DownRGS)]
+
+
+library(VennDiagram)
+
+venn_list <- list(DownGs = DownRGS, `Uniq-Cre-Lost` = Uniq_Cre_Lost_gene$x)
+
+ggvenn(venn_list, 
+       fill_color = c("lightblue", "skyblue"),
+       stroke_size = 0.8,         # Slightly thicker border for "pop"
+       set_name_size = 6,         # Makes "UpGs" and "Uniq-Cre-Gained" larger
+       text_size = 8,             # Makes the numbers (172, 4, 452) clearer
+       show_percentage = FALSE) + # Usually cleaner for publication
+  theme(plot.title = element_text(face = "bold", hjust = 0.5)) +
+  # This line forces the set names to be bold if your system supports it
+  annotate("text", x = -0.8, y = 1.2, label = "", fontface = "bold")
+```
+
+
+
+
+## Figure 3D 
+
+
+```{r, message=F, warning=F}
+library(ggvenn)
+
+UpRGS=c(venn_Fig3OfASD_Cre_Uniq_Gained_UpRGs$`Cre-Uniq-Gained ∩ UpRGs`, venn_Fig3OfASD_Cre_Uniq_Gained_UpRGs$UpRGs)
+
+UpRGS=UpRGS[!is.na(UpRGS)]
+
+
+library(VennDiagram)
+
+venn_list <- list(UpGs = UpRGS, Common = Common_enhancer_gene$x)
+
+ggvenn(venn_list, 
+       fill_color = c("lightblue", "skyblue"),
+       stroke_size = 0.8,         # Slightly thicker border for "pop"
+       set_name_size = 6,         # Makes "UpGs" and "Uniq-Cre-Gained" larger
+       text_size = 8,             # Makes the numbers (172, 4, 452) clearer
+       show_percentage = FALSE) + # Usually cleaner for publication
+  theme(plot.title = element_text(face = "bold", hjust = 0.5)) +
+  # This line forces the set names to be bold if your system supports it
+  annotate("text", x = -0.8, y = 1.2, label = "", fontface = "bold")
+```
+
+
+```{r, message=F, warning=F}
+DownRGS=c(venn_Fig3OfASD_Cre_Uniq_Lost_DownRGs$`Cre-Uniq-Lost ∩ DownRGs`, venn_Fig3OfASD_Cre_Uniq_Lost_DownRGs$DownRGs)
+
+DownRGS=DownRGS[!is.na(DownRGS)]
+
+
+library(VennDiagram)
+
+venn_list <- list(DownGs = DownRGS, Common = Common_enhancer_gene$x)
+
+ggvenn(venn_list, 
+       fill_color = c("lightblue", "skyblue"),
+       stroke_size = 0.8,         # Slightly thicker border for "pop"
+       set_name_size = 6,         # Makes "UpGs" and "Uniq-Cre-Gained" larger
+       text_size = 8,             # Makes the numbers (172, 4, 452) clearer
+       show_percentage = FALSE) + # Usually cleaner for publication
+  theme(plot.title = element_text(face = "bold", hjust = 0.5)) +
+  # This line forces the set names to be bold if your system supports it
+  annotate("text", x = -0.8, y = 1.2, label = "", fontface = "bold")
+```

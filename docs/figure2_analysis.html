@@ -400,7 +400,7 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-03-19
+<strong>Last updated:</strong> 2026-04-03
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -534,15 +534,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree063e1e948d4f0a4ca7a5686f6241b0f02d2d9b84targetblank063e1e9a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreeb34b672be89247226b9f6a68fd24dbc23c25ff32targetblankb34b672a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/han16/autism_epigenetics/tree/063e1e948d4f0a4ca7a5686f6241b0f02d2d9b84" target="_blank">063e1e9</a>
+<a href="https://github.com/han16/autism_epigenetics/tree/b34b672be89247226b9f6a68fd24dbc23c25ff32" target="_blank">b34b672</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstree063e1e948d4f0a4ca7a5686f6241b0f02d2d9b84targetblank063e1e9a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomhan16autismepigeneticstreeb34b672be89247226b9f6a68fd24dbc23c25ff32targetblankb34b672a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -552,7 +552,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/han16/autism_epigenetics/tree/063e1e948d4f0a4ca7a5686f6241b0f02d2d9b84" target="_blank">063e1e9</a>.
+<a href="https://github.com/han16/autism_epigenetics/tree/b34b672be89247226b9f6a68fd24dbc23c25ff32" target="_blank">b34b672</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -569,11 +569,13 @@ were generated:
 Ignored files:
     Ignored:    Fig2B_peak_windows/
     Ignored:    Figures/
+    Ignored:    analysis/Fig2B_peak_windows/
 
 Untracked files:
-    Untracked:  ATAC_Ultra_Sharp.png
-    Untracked:  figure_2B_Cre_Gained.bed
-    Untracked:  figure_2B_Cre_Lost.bed
+    Untracked:  analysis/Venn_Overlap.tiff
+    Untracked:  analysis/Venn_Overlap.tiff.2026-04-03_10-17-09.598872.log
+    Untracked:  analysis/Venn_Overlap.tiff.2026-04-03_10-17-27.607653.log
+    Untracked:  analysis/figure3_analysis.Rmd
 
 Unstaged changes:
     Modified:   analysis/figure2_analysis.Rmd
@@ -622,6 +624,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/han16/autism_epigenetics/blob/b34b672be89247226b9f6a68fd24dbc23c25ff32/analysis/figure2_analysis.Rmd" target="_blank">b34b672</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-19
+</td>
+<td>
+3/19/2026
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/han16/autism_epigenetics/b34b672be89247226b9f6a68fd24dbc23c25ff32/docs/figure2_analysis.html" target="_blank">b34b672</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-19
+</td>
+<td>
+3/19/2026
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -781,11 +817,7 @@ library(GenomicRanges)
 library(TxDb.Mmusculus.UCSC.mm10.knownGene) # For Mouse mm10 TSS
 
 
-# 1. Convert ATAC peaks (format chr1:start:end)   # this is union peak 
-atac_gr &lt;- atac_peaks %&gt;%
-  separate(peak_window, into = c(&quot;chr&quot;, &quot;start&quot;, &quot;end&quot;), sep = &quot;:&quot;, remove = FALSE) %&gt;%
-  mutate(start = as.numeric(start), end = as.numeric(end)) %&gt;%
-  makeGRangesFromDataFrame(keep.extra.columns = TRUE)
+# 1. Convert ATAC peaks (format chr1:start:end)
 
 ### this is cre peaks 
 colnames(cre_atac_peaks)[1:3] &lt;- c(&quot;chr&quot;, &quot;start&quot;, &quot;end&quot;)
@@ -825,17 +857,15 @@ tss_gr &lt;- resize(genes_gr, width = 1, fix = &quot;start&quot;)
 # This is much safer than punion/shift
 tss_2kb_zone &lt;- tss_gr + 1000
 
-# Filter ATAC windows that are NOT in the TSS zone (Distal regions)
-cre_atac_distal_gr &lt;- atac_gr[!overlapsAny(cre_atac_gr, tss_2kb_zone)]
-flx_atac_distal_gr &lt;- atac_gr[!overlapsAny(flx_atac_gr, tss_2kb_zone)]
 
-
-cre_active_enhancers_gr &lt;- subsetByOverlaps(cre_atac_distal_gr, cre_h3k27ac_gr)
+cre_active_enhancers_gr &lt;- subsetByOverlaps(cre_h3k27ac_gr, cre_atac_gr,)  # keep h3k27ac peaks 
+cre_active_enhancers_gr&lt;- cre_active_enhancers_gr[!overlapsAny(cre_active_enhancers_gr, tss_2kb_zone)] # exclude 2kb promity of TSS
 cat(&quot;Found&quot;, length(cre_active_enhancers_gr), &quot;cre active distal enhancers.\n&quot;)</code></pre>
-<pre><code>Found 35340 cre active distal enhancers.</code></pre>
-<pre class="r"><code>flx_active_enhancers_gr &lt;- subsetByOverlaps(flx_atac_distal_gr, flx_h3k27ac_gr)
+<pre><code>Found 26016 cre active distal enhancers.</code></pre>
+<pre class="r"><code>flx_active_enhancers_gr &lt;- subsetByOverlaps(flx_h3k27ac_gr, flx_atac_gr)
+flx_active_enhancers_gr&lt;- flx_active_enhancers_gr[!overlapsAny(flx_active_enhancers_gr, tss_2kb_zone)]
 cat(&quot;Found&quot;, length(flx_active_enhancers_gr), &quot;flx active distal enhancers.\n&quot;)</code></pre>
-<pre><code>Found 50244 flx active distal enhancers.</code></pre>
+<pre><code>Found 36808 flx active distal enhancers.</code></pre>
 <pre class="r"><code>library(TxDb.Mmusculus.UCSC.mm10.knownGene) # For Mouse mm10 TSS
 library(org.Mm.eg.db)
 ########## find enhancer genes 
@@ -946,6 +976,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/han16/autism_epigenetics/blob/b34b672be89247226b9f6a68fd24dbc23c25ff32/docs/figure/figure2_analysis.Rmd/unnamed-chunk-5-1.png" target="_blank">b34b672</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/han16/autism_epigenetics/blob/5e9dcbde298a13c772c053a7736934e8e916523a/docs/figure/figure2_analysis.Rmd/unnamed-chunk-5-1.png" target="_blank">5e9dcbd</a>
 </td>
 <td>
@@ -971,9 +1012,8 @@ han
 </div>
 </div>
 <ol style="list-style-type: decimal">
-<li><p><strong>Active Enhancer Definition: ATAC peak windows intersect
-with H3K27ac peak windows, except 2kb proximity of
-TSS</strong>.</p></li>
+<li><p><strong>Active Enhancer Definition: H3k27ac peaks that intersect
+with ATAC peak windows, except 2kb proximity of TSS</strong>.</p></li>
 <li><p>ATAC peaks: use Cre and Flx specific narrowPeak windows called
 from 2 combined replicates</p></li>
 <li><p><strong>enhancer genes: the nearest gene for each
@@ -984,7 +1024,7 @@ library(dplyr)
 library(ggvenn)
 
 # 1. Set your cutoff
-length_cutoff &lt;- 1000  # Try 10, then 1000, then 5000
+length_cutoff &lt;- 100  # Try 10, then 1000, then 5000
 
 # 2. Find overlaps and filter by width
 overlaps &lt;- findOverlaps(cre_active_enhancers_gr, flx_active_enhancers_gr)
@@ -994,7 +1034,7 @@ overlap_widths &lt;- width(pintersect(cre_active_enhancers_gr[queryHits(overlaps
 # 3. Identify pairs that meet the cutoff
 valid_hits &lt;- overlaps[overlap_widths &gt;= length_cutoff]
 length(valid_hits)</code></pre>
-<pre><code>[1] 9605</code></pre>
+<pre><code>[1] 22070</code></pre>
 <pre class="r"><code># 4. CREATE ENTIRELY UNIQUE IDs (Crucial Step)
 #  generate random unique strings so NO peak matches by default
 cre_unique_ids &lt;- paste0(&quot;Cre_Peak_&quot;, seq_along(cre_active_enhancers_gr))
@@ -1056,6 +1096,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/han16/autism_epigenetics/blob/b34b672be89247226b9f6a68fd24dbc23c25ff32/docs/figure/figure2_analysis.Rmd/unnamed-chunk-6-1.png" target="_blank">b34b672</a>
+</td>
+<td>
+han
+</td>
+<td>
+2026-03-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/han16/autism_epigenetics/blob/91488942bfbf84bb5926c805892d4d9441b8c5f3/docs/figure/figure2_analysis.Rmd/unnamed-chunk-6-1.png" target="_blank">9148894</a>
 </td>
 <td>
@@ -1069,11 +1120,49 @@ han
 </table>
 </div>
 </div>
+<pre class="r"><code>################## 
+# 1. Identify the indices of peaks that MET the overlap criteria
+cre_overlap_indices &lt;- unique(queryHits(valid_hits))
+flx_overlap_indices &lt;- unique(subjectHits(valid_hits))
+
+# 2. Recover &#39;Unchanged&#39; windows (those that passed the 1kb filter)
+unchanged_cre_windows &lt;- cre_active_enhancers_gr$peak_window[cre_overlap_indices]
+unchanged_flx_windows &lt;- flx_active_enhancers_gr$peak_window[flx_overlap_indices]
+
+# 3. Recover &#39;Unique&#39; windows (those that DID NOT meet the 1kb criteria)
+# These are the windows that appear in the outer circles of your Venn
+cre_unique_only_windows &lt;- cre_active_enhancers_gr$peak_window[-cre_overlap_indices]
+flx_unique_only_windows &lt;- flx_active_enhancers_gr$peak_window[-flx_overlap_indices]
+
+# --- Verification ---
+cat(&quot;Total Cre peaks:&quot;, length(cre_active_enhancers_gr), &quot;\n&quot;)</code></pre>
+<pre><code>Total Cre peaks: 26016 </code></pre>
+<pre class="r"><code>cat(&quot;Cre Unique (Gained):&quot;, length(cre_unique_only_windows), &quot;\n&quot;)</code></pre>
+<pre><code>Cre Unique (Gained): 0 </code></pre>
+<pre class="r"><code>cat(&quot;Cre Overlapping (Unchanged):&quot;, length(unchanged_cre_windows), &quot;\n&quot;)</code></pre>
+<pre><code>Cre Overlapping (Unchanged): 0 </code></pre>
 <ul>
 <li>Cre-Gained: active enhancers only in Cre; Cre-Lost: active enhancers
 only in Flx; Unchanged: active enhancers in both cre and flx with
 overlap greater than cutoff.</li>
 </ul>
+<pre class="r"><code>library(rtracklayer)
+
+# 1. Identify indices for peaks that MET the 1kb overlap criteria
+cre_overlap_indices &lt;- unique(queryHits(valid_hits))
+flx_overlap_indices &lt;- unique(subjectHits(valid_hits))
+
+# 2. Subset the GRanges objects to get only the UNIQUE (Gained/Lost) regions
+# This excludes anything that passed the 1kb overlap filter
+cre_gained_gr &lt;- cre_active_enhancers_gr[-cre_overlap_indices]
+cre_lost_gr   &lt;- flx_active_enhancers_gr[-flx_overlap_indices]
+
+# 3. Export to BED files for your &#39;08_generate_heatmap_for_fig2C.sh&#39; script
+# We ensure the BED files go into the directory your shell script expects
+dir.create(&quot;Fig2B_peak_windows&quot;, showWarnings = FALSE)
+
+#export.bed(cre_gained_gr, file.path(root, &quot;../Data/Figures_Generation_Data/figure_2B_Cre_Gained.bed&quot;))
+#export.bed(cre_lost_gr,   file.path(root, &quot;../Data/Figures_Generation_Data/figure_2B_Cre_Lost.bed&quot;))</code></pre>
 <pre class="r"><code>library(ggvenn)
 library(ggplot2)
 
@@ -1097,7 +1186,7 @@ ggvenn(venn_list,
   annotate(&quot;text&quot;, x = 1.2, y = 1.2, label = &quot;Uniq-Cre-Lost&quot;, 
            size = 6, fontface = &quot;bold&quot;) +
   # Label for &quot;Unchanged&quot; (Bottom Middle of intersection)
-  annotate(&quot;text&quot;, x = 0, y = -1.1, label = &quot;Unchanged&quot;, 
+  annotate(&quot;text&quot;, x = 0, y = -1.1, label = &quot;Common&quot;, 
            size = 6, fontface = &quot;bold&quot;) +
   labs(title = &quot;Enhancer Genes&quot;) +
   theme_void() +
@@ -1105,13 +1194,13 @@ ggvenn(venn_list,
     plot.title = element_text(hjust = 0.5, size = 22, face = &quot;bold&quot;, vjust = 2),
     plot.margin = margin(10, 10, 10, 10)
   )</code></pre>
-<p><img src="figure/figure2_analysis.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/figure2_analysis.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
-Past versions of unnamed-chunk-7-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div id="fig-unnamed-chunk-8-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -1130,19 +1219,33 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/han16/autism_epigenetics/blob/91488942bfbf84bb5926c805892d4d9441b8c5f3/docs/figure/figure2_analysis.Rmd/unnamed-chunk-7-1.png" target="_blank">9148894</a>
+<a href="https://github.com/han16/autism_epigenetics/blob/b34b672be89247226b9f6a68fd24dbc23c25ff32/docs/figure/figure2_analysis.Rmd/unnamed-chunk-8-1.png" target="_blank">b34b672</a>
 </td>
 <td>
 han
 </td>
 <td>
-2026-03-05
+2026-03-19
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+<pre class="r"><code>Uniq_Cre_Gained_enhancer_gene=setdiff(unique(cre_enhancer_gene$gene_symbol), unique(flx_enhancer_gene$gene_symbol))
+Uniq_Cre_Lost_enhancer_gene=setdiff(unique(flx_enhancer_gene$gene_symbol), unique(cre_enhancer_gene$gene_symbol))
+Common_enhancer_gene=intersect(unique(flx_enhancer_gene$gene_symbol), unique(cre_enhancer_gene$gene_symbol))
+
+
+cat(&quot;Uniq_Cre_Gained_enhancer_gene:&quot;, length(Uniq_Cre_Gained_enhancer_gene), &quot;\n&quot;)</code></pre>
+<pre><code>Uniq_Cre_Gained_enhancer_gene: 488 </code></pre>
+<pre class="r"><code>cat(&quot;Uniq_Cre_Lost_enhancer_gene:&quot;, length(Uniq_Cre_Lost_enhancer_gene), &quot;\n&quot;)</code></pre>
+<pre><code>Uniq_Cre_Lost_enhancer_gene: 2221 </code></pre>
+<pre class="r"><code>cat(&quot;Common_enhancer_gene:&quot;, length(Common_enhancer_gene), &quot;\n&quot;)</code></pre>
+<pre><code>Common_enhancer_gene: 7028 </code></pre>
+<pre class="r"><code>#write.csv(Uniq_Cre_Gained_enhancer_gene, file=file.path(root, &quot;../Data/Figures_Generation_Data/figure_2B_Uniq_Cre_Gained_gene.csv&quot;))
+#write.csv(Uniq_Cre_Lost_enhancer_gene, file=file.path(root, &quot;../Data/Figures_Generation_Data/figure_2B_Uniq_Cre_Lost_gene.csv&quot;))
+#write.csv(Common_enhancer_gene, file=file.path(root, &quot;../Data/Figures_Generation_Data/figure_2B_Common_enhancer_gene.csv&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1174,29 +1277,30 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] ggvenn_0.1.10                            
- [2] org.Mm.eg.db_3.19.1                      
- [3] TxDb.Mmusculus.UCSC.mm10.knownGene_3.10.0
- [4] GenomicFeatures_1.56.0                   
- [5] AnnotationDbi_1.66.0                     
- [6] Biobase_2.64.0                           
- [7] GenomicRanges_1.56.2                     
- [8] GenomeInfoDb_1.40.0                      
- [9] IRanges_2.38.0                           
-[10] S4Vectors_0.42.0                         
-[11] BiocGenerics_0.50.0                      
-[12] lubridate_1.9.3                          
-[13] forcats_1.0.0                            
-[14] stringr_1.5.1                            
-[15] purrr_1.0.2                              
-[16] readr_2.1.5                              
-[17] tidyr_1.3.1                              
-[18] tibble_3.2.1                             
-[19] ggplot2_3.5.1                            
-[20] tidyverse_2.0.0                          
-[21] readxl_1.4.3                             
-[22] dplyr_1.1.4                              
-[23] rprojroot_2.0.4                          
+ [1] rtracklayer_1.64.0                       
+ [2] ggvenn_0.1.10                            
+ [3] org.Mm.eg.db_3.19.1                      
+ [4] TxDb.Mmusculus.UCSC.mm10.knownGene_3.10.0
+ [5] GenomicFeatures_1.56.0                   
+ [6] AnnotationDbi_1.66.0                     
+ [7] Biobase_2.64.0                           
+ [8] GenomicRanges_1.56.2                     
+ [9] GenomeInfoDb_1.40.0                      
+[10] IRanges_2.38.0                           
+[11] S4Vectors_0.42.0                         
+[12] BiocGenerics_0.50.0                      
+[13] lubridate_1.9.3                          
+[14] forcats_1.0.0                            
+[15] stringr_1.5.1                            
+[16] purrr_1.0.2                              
+[17] readr_2.1.5                              
+[18] tidyr_1.3.1                              
+[19] tibble_3.2.1                             
+[20] ggplot2_3.5.1                            
+[21] tidyverse_2.0.0                          
+[22] readxl_1.4.3                             
+[23] dplyr_1.1.4                              
+[24] rprojroot_2.0.4                          
 
 loaded via a namespace (and not attached):
  [1] DBI_1.2.3                   bitops_1.0-7               
@@ -1216,33 +1320,32 @@ loaded via a namespace (and not attached):
 [29] later_1.3.2                 DelayedArray_0.30.1        
 [31] BiocParallel_1.38.0         parallel_4.4.0             
 [33] R6_2.5.1                    bslib_0.7.0                
-[35] stringi_1.8.4               rtracklayer_1.64.0         
-[37] jquerylib_0.1.4             cellranger_1.1.0           
-[39] Rcpp_1.0.12                 SummarizedExperiment_1.34.0
-[41] knitr_1.46                  httpuv_1.6.15              
-[43] Matrix_1.7-0                timechange_0.3.0           
-[45] tidyselect_1.2.1            rstudioapi_0.16.0          
-[47] abind_1.4-5                 yaml_2.3.8                 
-[49] codetools_0.2-20            curl_5.2.1                 
-[51] lattice_0.22-6              withr_3.0.0                
-[53] KEGGREST_1.44.0             evaluate_0.23              
-[55] Biostrings_2.72.0           pillar_1.9.0               
-[57] MatrixGenerics_1.16.0       whisker_0.4.1              
-[59] generics_0.1.3              RCurl_1.98-1.16            
-[61] hms_1.1.3                   munsell_0.5.1              
-[63] scales_1.3.0                glue_1.7.0                 
-[65] tools_4.4.0                 BiocIO_1.14.0              
-[67] GenomicAlignments_1.40.0    fs_1.6.4                   
-[69] XML_3.99-0.20               colorspace_2.1-0           
-[71] GenomeInfoDbData_1.2.12     restfulr_0.0.16            
-[73] cli_3.6.2                   workflowr_1.7.1            
-[75] fansi_1.0.6                 S4Arrays_1.4.1             
-[77] gtable_0.3.5                sass_0.4.9                 
-[79] digest_0.6.35               SparseArray_1.4.8          
-[81] rjson_0.2.23                farver_2.1.2               
-[83] memoise_2.0.1               htmltools_0.5.8.1          
-[85] lifecycle_1.0.4             httr_1.4.7                 
-[87] bit64_4.0.5                </code></pre>
+[35] stringi_1.8.4               jquerylib_0.1.4            
+[37] cellranger_1.1.0            Rcpp_1.0.12                
+[39] SummarizedExperiment_1.34.0 knitr_1.46                 
+[41] httpuv_1.6.15               Matrix_1.7-0               
+[43] timechange_0.3.0            tidyselect_1.2.1           
+[45] rstudioapi_0.16.0           abind_1.4-5                
+[47] yaml_2.3.8                  codetools_0.2-20           
+[49] curl_5.2.1                  lattice_0.22-6             
+[51] withr_3.0.0                 KEGGREST_1.44.0            
+[53] evaluate_0.23               Biostrings_2.72.0          
+[55] pillar_1.9.0                MatrixGenerics_1.16.0      
+[57] whisker_0.4.1               generics_0.1.3             
+[59] RCurl_1.98-1.16             hms_1.1.3                  
+[61] munsell_0.5.1               scales_1.3.0               
+[63] glue_1.7.0                  tools_4.4.0                
+[65] BiocIO_1.14.0               GenomicAlignments_1.40.0   
+[67] fs_1.6.4                    XML_3.99-0.20              
+[69] colorspace_2.1-0            GenomeInfoDbData_1.2.12    
+[71] restfulr_0.0.16             cli_3.6.2                  
+[73] workflowr_1.7.1             fansi_1.0.6                
+[75] S4Arrays_1.4.1              gtable_0.3.5               
+[77] sass_0.4.9                  digest_0.6.35              
+[79] SparseArray_1.4.8           rjson_0.2.23               
+[81] farver_2.1.2                memoise_2.0.1              
+[83] htmltools_0.5.8.1           lifecycle_1.0.4            
+[85] httr_1.4.7                  bit64_4.0.5                </code></pre>
 </div>
 </div>
 
