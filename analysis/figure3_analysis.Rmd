@@ -73,6 +73,45 @@ ggvenn(venn_list,
 
 
 
+```{r, message=F, warning=F}
+library(DT)
+library(magrittr)
+
+# 1. Define vectors from your venn_list
+upgs_vec <- venn_list$UpGs
+uniq_cre_vec <- venn_list$`Uniq-Cre-Gained`
+overlap_vec <- intersect(upgs_vec, uniq_cre_vec)
+
+# 2. Determine max length and pad
+max_ln <- max(length(upgs_vec), length(uniq_cre_vec), length(overlap_vec))
+
+# 3. Create dataframe and replace NAs with empty strings ""
+gene_comp_df <- data.frame(
+  UpGs = `length<-`(upgs_vec, max_ln),
+  Uniq_Cre_Gained = `length<-`(uniq_cre_vec, max_ln),
+  Overlapping_Genes = `length<-`(overlap_vec, max_ln)
+)
+
+# Replace all NA values globally in the dataframe
+gene_comp_df[is.na(gene_comp_df)] <- ""
+
+# 4. Output using your DT configuration
+gene_comp_df %>%
+  datatable(
+    extensions = 'Buttons',
+    caption = "UpGs vs Uniq-Cre-Gained", 
+    options = list(
+      dom = 'Blfrtip',
+      buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+      lengthMenu = list(c(10, 25, 50, -1), c(10, 25, 50, "All"))
+    )
+  )
+```
+
+
+
+
+
 
 ```{r, message=F, warning=F}
 DownRGS=c(venn_Fig3OfASD_Cre_Uniq_Lost_DownRGs$`Cre-Uniq-Lost ∩ DownRGs`, venn_Fig3OfASD_Cre_Uniq_Lost_DownRGs$DownRGs)
@@ -96,6 +135,42 @@ ggvenn(venn_list,
 ```
 
 
+
+
+```{r, message=F, warning=F}
+library(DT)
+library(magrittr)
+
+# 1. Define vectors from your venn_list
+DownRGS_vec <- venn_list$DownGs
+uniq_cre_vec <- venn_list$`Uniq-Cre-Lost`
+overlap_vec <- intersect(DownRGS_vec, uniq_cre_vec)
+
+# 2. Determine max length and pad
+max_ln <- max(length(DownRGS_vec), length(uniq_cre_vec), length(overlap_vec))
+
+# 3. Create dataframe and replace NAs with empty strings ""
+gene_comp_df <- data.frame(
+  DownGs = `length<-`(DownRGS_vec, max_ln),
+  Uniq_Cre_Lost = `length<-`(uniq_cre_vec, max_ln),
+  Overlapping_Genes = `length<-`(overlap_vec, max_ln)
+)
+
+# Replace all NA values globally in the dataframe
+gene_comp_df[is.na(gene_comp_df)] <- ""
+
+# 4. Output using your DT configuration
+gene_comp_df %>%
+  datatable(
+    extensions = 'Buttons',
+    caption = "UpGs vs Uniq-Cre-Lost", 
+    options = list(
+      dom = 'Blfrtip',
+      buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+      lengthMenu = list(c(10, 25, 50, -1), c(10, 25, 50, "All"))
+    )
+  )
+```
 
 
 ## Figure 3D 
